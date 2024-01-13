@@ -36,7 +36,7 @@ import frc.lib.swervelib.parser.SwerveDriveConfiguration;
 import frc.lib.swervelib.simulation.SwerveIMUSimulation;
 import frc.lib.swervelib.telemetry.SwerveDriveTelemetry;
 import frc.lib.swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
-import frc.team191.Constants;
+import frc.team1126.Constants;
 
 /**
  * Swerve Drive class representing and controlling the swerve drive.
@@ -233,7 +233,7 @@ public class SecondOrderSwerveDrive extends SwerveDrive
 
     // Thank you to Jared Russell FRC254 for Open Loop Compensation Code
     // https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964/5
-    if (Constants.SwerveConstants.CHASSIS_VELOCITY_CORRECTION)
+    if (Constants.DriveConstants.CHASSIS_VELOCITY_CORRECTION)
     {
       double dtConstant = 0.009;
       Pose2d robotPoseVel = new Pose2d(velocity.vxMetersPerSecond * dtConstant,
@@ -247,7 +247,7 @@ public class SecondOrderSwerveDrive extends SwerveDrive
 
     // Heading Angular Velocity Deadband, might make a configuration option later.
     // Originally made by Team 1466 Webb Robotics.
-    if (Constants.SwerveConstants.HEADING_CORRECTION)
+    if (Constants.DriveConstants.HEADING_CORRECTION)
     {
       if (Math.abs(rotation) < 0.01)
       {

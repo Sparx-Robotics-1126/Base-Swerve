@@ -11,7 +11,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 import frc.lib.swervelib.imu.SwerveIMU;
-import frc.lib.swervelib.math.SwerveKinematics2;
 import frc.lib.swervelib.math.SwerveMath;
 import frc.lib.swervelib.math.SwerveModuleState2;
 import frc.lib.swervelib.math.SwervePoseEstimator2;
@@ -37,7 +35,7 @@ import frc.lib.swervelib.parser.SwerveDriveConfiguration;
 import frc.lib.swervelib.simulation.SwerveIMUSimulation;
 import frc.lib.swervelib.telemetry.SwerveDriveTelemetry;
 import frc.lib.swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
-import frc.team191.Constants;
+import frc.team1126.Constants;
 
 /**
  * Swerve Drive class representing and controlling the swerve drive.
@@ -123,7 +121,7 @@ public class FirstOrderSwerveDrive extends SwerveDrive
     swerveController = new SwerveController(controllerConfig);
     // Create Kinematics from swerve module locations.
     kinematics = new SwerveDriveKinematics(config.moduleLocationsMeters);
-    swerveTranslationScalar = Constants.SwerveConstants.SWERVE_NORMAL_TRANSLATION;
+    swerveTranslationScalar = Constants.DriveConstants.SWERVE_NORMAL_TRANSLATION;
 
     // Create an integrator for angle if the robot is being simulated to emulate an IMU
     // If the robot is real, instantiate the IMU instead.
@@ -204,9 +202,9 @@ public class FirstOrderSwerveDrive extends SwerveDrive
   {
 
     Rotation2d heading = getYaw();
-    if(Constants.SwerveConstants.CHASSIS_VELOCITY_CORRECTION)
+    if(Constants.DriveConstants.CHASSIS_VELOCITY_CORRECTION)
     {
-      heading = heading.plus(Rotation2d.fromDegrees(getYawVel().getDegrees() * Constants.SwerveConstants.DT_CONSTANT));
+      heading = heading.plus(Rotation2d.fromDegrees(getYawVel().getDegrees() * Constants.DriveConstants.DT_CONSTANT));
     }
     
     // Creates a robot-relative ChassisSpeeds object, converting from field-relative speeds if
@@ -219,7 +217,7 @@ public class FirstOrderSwerveDrive extends SwerveDrive
         
     // Heading Angular Velocity Deadband, might make a configuration option later.
     // Originally made by Team 1466 Webb Robotics.
-    if (Constants.SwerveConstants.HEADING_CORRECTION)
+    if (Constants.DriveConstants.HEADING_CORRECTION)
     {
       if (Math.abs(rotation) < 0.01)
       {
@@ -231,7 +229,7 @@ public class FirstOrderSwerveDrive extends SwerveDrive
       } 
       else
       {
-        lastHeadingRadians = getYaw().getRadians() + getYawVel().getRadians() * Constants.SwerveConstants.DT_CONSTANT;
+        lastHeadingRadians = getYaw().getRadians() + getYawVel().getRadians() * Constants.DriveConstants.DT_CONSTANT;
       }
     }
 

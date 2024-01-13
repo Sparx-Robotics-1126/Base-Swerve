@@ -2,14 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.team191.subsystems;
+package frc.team1126.subsystems;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.io.File;
 
@@ -17,12 +22,21 @@ import frc.lib.swervelib.FirstOrderSwerveDrive;
 import frc.lib.swervelib.SecondOrderSwerveDrive;
 import frc.lib.swervelib.SwerveController;
 import frc.lib.swervelib.SwerveDrive;
+import frc.lib.swervelib.SwerveModule;
+import frc.team1126.Mechanisms.SwerveModules;
 import frc.lib.swervelib.parser.SwerveControllerConfiguration;
 import frc.lib.swervelib.parser.SwerveDriveConfiguration;
 import frc.lib.swervelib.parser.SwerveParser;
 import frc.lib.swervelib.telemetry.SwerveDriveTelemetry;
 import frc.lib.swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
-import frc.team191.Constants;
+import frc.team1126.Constants;
+import frc.team1126.Constants.ModuleConstants;
+import frc.team1126.Constants.ModuleConstants.BackLeftModule;
+import frc.team1126.Constants.ModuleConstants.BackRightModule;
+import frc.team1126.Constants.ModuleConstants.FrontLeftModule;
+import frc.team1126.Constants.ModuleConstants.FrontRightModule;
+import frc.team1126.Constants.ModuleConstants.GenericModuleConstants;
+import frc.team1126.sensors.Limelight;
 
 public class SwerveSubsystem extends SubsystemBase
 {
@@ -31,6 +45,16 @@ public class SwerveSubsystem extends SubsystemBase
    * Swerve drive object.
    */
   private final SwerveDrive       swerveDrive;
+  
+  private final SwerveModules frontLeft;
+	private final SwerveModules frontRight;
+	private final SwerveModules backLeft;
+	private final SwerveModules backRight;
+  
+  private SwerveDrivePoseEstimator posEstimator;
+  private SwerveModulePosition[] swervePositions;
+  private final PigeonSubsystem gyro;
+
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -39,11 +63,52 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public SwerveSubsystem(File directory)
   {
+    frontLeft = new SwerveModules(
+				"FL",
+				FrontLeftModule.kModuleConstants,
+				GenericModuleConstants.kSwerveConstants,
+				true,true,
+				ModuleConstants.kModuleTurningGains,
+				ModuleConstants.kModuleDriveGains);
+
+		frontRight = new SwerveModules(
+				"FR",
+				FrontRightModule.kModuleConstants,
+				GenericModuleConstants.kSwerveConstants,
+				true, true,
+				ModuleConstants.kModuleTurningGains,
+				ModuleConstants.kModuleDriveGains);
+
+		backLeft = new SwerveModules(
+				"RL",
+				BackLeftModule.kModuleConstants,
+				GenericModuleConstants.kSwerveConstants,
+				true,true,
+				ModuleConstants.kModuleTurningGains,
+				ModuleConstants.kModuleDriveGains);
+
+		backRight = new SwerveModules(
+				"RR",
+				BackRightModule.kModuleConstants,
+				GenericModuleConstants.kSwerveConstants,
+				true, true,
+				ModuleConstants.kModuleTurningGains,
+				ModuleConstants.kModuleDriveGains);
+
+		swervePositions = new SwerveModulePosition[] {
+				frontLeft.getPosition(),
+				frontRight.getPosition(),
+				backLeft.getPosition(),
+				backRight.getPosition()
+		};
+
+   gyro = PigeonSubsystem.getInstance();//new WPI_Pigeon2(DriveConstants.kPigeonPort, Constants.kCTRECANBusName);
+		gyro.setYaw(0);
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try
     {
-      if(Constants.SwerveConstants.IS_FIRST_ORDER) swerveDrive = new SwerveParser(directory).createFirstOrderSwerveDrive();
+      if(Constants.DriveConstants.IS_FIRST_ORDER) swerveDrive = new SwerveParser(directory).createFirstOrderSwerveDrive();
       else                                        swerveDrive = new SwerveParser(directory).createSecondOrderSwerveDrive();
     } catch (Exception e)
     {
@@ -59,7 +124,47 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public SwerveSubsystem(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg)
   {
-    if(Constants.SwerveConstants.IS_FIRST_ORDER) swerveDrive = new FirstOrderSwerveDrive(driveCfg, controllerCfg);
+    frontLeft = new SwerveModules(
+				"FL",
+				FrontLeftModule.kModuleConstants,
+				GenericModuleConstants.kSwerveConstants,
+				true,true,
+				ModuleConstants.kModuleTurningGains,
+				ModuleConstants.kModuleDriveGains);
+
+		frontRight = new SwerveModules(
+				"FR",
+				FrontRightModule.kModuleConstants,
+				GenericModuleConstants.kSwerveConstants,
+				true, true,
+				ModuleConstants.kModuleTurningGains,
+				ModuleConstants.kModuleDriveGains);
+
+		backLeft = new SwerveModules(
+				"RL",
+				BackLeftModule.kModuleConstants,
+				GenericModuleConstants.kSwerveConstants,
+				true,true,
+				ModuleConstants.kModuleTurningGains,
+				ModuleConstants.kModuleDriveGains);
+
+		backRight = new SwerveModules(
+				"RR",
+				BackRightModule.kModuleConstants,
+				GenericModuleConstants.kSwerveConstants,
+				true, true,
+				ModuleConstants.kModuleTurningGains,
+				ModuleConstants.kModuleDriveGains);
+
+		swervePositions = new SwerveModulePosition[] {
+				frontLeft.getPosition(),
+				frontRight.getPosition(),
+				backLeft.getPosition(),
+				backRight.getPosition()
+    };
+    gyro = PigeonSubsystem.getInstance();//new WPI_Pigeon2(DriveConstants.kPigeonPort, Constants.kCTRECANBusName);
+		gyro.setYaw(0);
+    if(Constants.DriveConstants.IS_FIRST_ORDER) swerveDrive = new FirstOrderSwerveDrive(driveCfg, controllerCfg);
     else                                        swerveDrive = new SecondOrderSwerveDrive(driveCfg, controllerCfg);
   }
 
@@ -87,6 +192,10 @@ public class SwerveSubsystem extends SubsystemBase
   public void periodic()
   {
     swerveDrive.updateOdometry();
+//    SmartDashboard.putBoolean("Field Centric", m_fieldOriented);
+
+    SmartDashboard.putNumber("LimeLight Distance", Limelight.getInstance().getDistance(3.5));
+
   }
 
   @Override
@@ -300,6 +409,30 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.lockPose();
   }
+
+  public void resetPoseEstimator(Pose2d pose) {
+		posEstimator.resetPosition(
+		gyro.getRotation2d(), 
+			swervePositions, 
+			pose);
+	}
+
+  public Pose2d getPoseEstimatorPose2d() {
+		return posEstimator.getEstimatedPosition();
+	}
+
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
+		setModuleStates(desiredStates, false);
+	}
+
+  public void setModuleStates(SwerveModuleState[] desiredStates, boolean isTurbo) {
+		SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, GenericModuleConstants.kMaxModuleSpeedMetersPerSecond);
+
+		frontLeft.setDesiredState(desiredStates[0], isTurbo);
+		frontRight.setDesiredState(desiredStates[1], isTurbo);
+		backLeft.setDesiredState(desiredStates[2], isTurbo);
+		backRight.setDesiredState(desiredStates[3], isTurbo);
+	}
 
   /**
    * Add a fake vision reading for testing purposes.
