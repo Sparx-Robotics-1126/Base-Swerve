@@ -1,0 +1,13 @@
+{
+  "angleJoystickRadiusDeadband": 0.5,
+  "heading": {
+    "p": 4,
+    "i": 0,
+    "d": 0
+  },
+  "snap": {
+    "p": 12,
+    "i": 0,
+    "d": 0.001
+  }
+}
