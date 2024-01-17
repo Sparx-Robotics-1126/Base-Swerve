@@ -1,4 +1,4 @@
-package frc.team191;
+package frc.team1126;
 
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -8,9 +8,67 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import frc.lib.Toolbox.PIDGains;
+
 import java.util.List;
 public final class Constants {
 
+  
+public static class CANdleConstants
+{
+  /* CANdle ID */
+public static final int CANdleID = 3;
+
+/* Purple RGB */
+public static final int PURPLE_R = 255;
+public static final int PURPLE_G = 0;
+public static final int PURPLE_B = 191;
+
+/* Yellow RGB */
+public static final int YELLOW_R = 255;
+public static final int YELLOW_G = 130;
+public static final int YELLOW_B = 0;
+
+/* Red RGB */
+public static final int RED_R = 255;
+public static final int RED_G = 0;
+public static final int RED_B = 0;
+
+/* Green RGB */
+public static final int GREEN_R = 0;
+public static final int GREEN_G = 255;
+public static final int GREEN_B = 0;
+
+/* Blue RGB */
+public static final int BLUE_R = 0;
+public static final int BLUE_G = 0;
+public static final int BLUE_B = 255;
+
+}
+
+  public static class LimelightConstants {
+    public static final boolean USE_FOR_TARGETING = true;
+    public static final boolean LED_ON_DEFAULT = true;
+    public static final double CAMERA_MIN_FLOOR_HEIGHT = 113.03;
+    public static final double CAMERA_INITIAL_PITCH = 0;
+  // declare ID's of pipelines here
+  public static final int kCubePipeline = 0;
+  public static final int kReflectivePipeline = 1;
+  public static final int kApriltagPipeline = 4;
+
+  // PID values for limelight
+  public static final PIDGains kLLTargetGains = new PIDGains(0.008, 0, 0);
+
+  public static final PIDGains kLLPuppyTurnGains = new PIDGains(0.02, 0, 0); // .008
+  public static final PIDGains kLLPuppyDriveGains = new PIDGains(0.008, 0, 0);
+  public static final double kPuppyTurnMotionSmoothing = 0.3;
+  public static final double kPuppyDriveMotionSmoothing = 0.4;
+
+  public static final PIDGains kLLAlignStrafeGains = new PIDGains(.04, 0.0015, 0.001);
+  public static final PIDGains kLLAlignDriveGains = new PIDGains(.025, 0.0015, 0.0005);
+  public static final double kAlignDriveMotionSmoothing = 0;
+  public static final double kAlignStrafeMotionSmoothing = 0;
+}
     /* Field related constants */
     public static final class FieldConstants {
       // List of possible scoring locations as Pose2d objects

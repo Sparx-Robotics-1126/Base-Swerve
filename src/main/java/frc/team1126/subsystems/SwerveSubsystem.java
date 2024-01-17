@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.team191.subsystems;
+package frc.team1126.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,7 +22,7 @@ import frc.lib.swervelib.parser.SwerveDriveConfiguration;
 import frc.lib.swervelib.parser.SwerveParser;
 import frc.lib.swervelib.telemetry.SwerveDriveTelemetry;
 import frc.lib.swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
-import frc.team191.Constants;
+import frc.team1126.Constants;
 
 public class SwerveSubsystem extends SubsystemBase
 {
