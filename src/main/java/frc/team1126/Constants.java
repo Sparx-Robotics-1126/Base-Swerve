@@ -48,7 +48,7 @@ public static final int BLUE_B = 255;
 
   public static class LimelightConstants {
     public static final boolean USE_FOR_TARGETING = true;
-    public static final boolean LED_ON_DEFAULT = true;
+    public static final boolean LED_ON_DEFAULT = false;
     public static final double CAMERA_MIN_FLOOR_HEIGHT = 113.03;
     public static final double CAMERA_INITIAL_PITCH = 0;
   // declare ID's of pipelines here

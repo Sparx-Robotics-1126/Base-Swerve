@@ -69,7 +69,7 @@ public class LLAlignCommand extends CommandBase {
 
 		
 
-		LimelightHelpers.setLEDMode_ForceOn("");
+		LimelightHelpers.setLEDMode_ForceOff("");
 		Limelight.getInstance().setForTargeting(true);
 	}
 
@@ -98,7 +98,7 @@ public class LLAlignCommand extends CommandBase {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		LimelightHelpers.setLEDMode_PipelineControl("");
+		// LimelightHelpers.setLEDMode_PipelineControl("");
 	}
 
 	// Returns true when the command should end.

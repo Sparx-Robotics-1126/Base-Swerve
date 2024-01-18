@@ -5,8 +5,11 @@ package frc.team1126.subsystems.sensors;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.team1126.Constants.LimelightConstants;
 
 import static frc.team1126.Constants.LimelightConstants.*;
+
+import java.io.Console;
 
 public class Limelight {
     NetworkTableEntry tx;
@@ -33,8 +36,12 @@ public class Limelight {
         ledMode = table.getEntry("ledMode");
         camMode = table.getEntry("camMode");
 
+        LimelightHelpers.setPipelineIndex("", LimelightConstants.kApriltagPipeline);
+		LimelightHelpers.setLEDMode_ForceOff("");
+
         setForTargeting(USE_FOR_TARGETING);
-        setLED(LED_ON_DEFAULT);
+        ledMode.setNumber(1);
+        System.out.println("init limelight");
     }
 
     public double getCameraHeight() {
