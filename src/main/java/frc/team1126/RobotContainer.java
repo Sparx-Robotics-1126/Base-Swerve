@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.team1126.commands.Limelight.LLAlignCommand;
 import frc.team1126.commands.drive.DriveFieldRelative;
-import frc.team1126.subsystems.CANdleSubsystem;
 import frc.team1126.subsystems.SwerveSubsystem;
+import frc.team1126.subsystems.sensors.Limelight;
 public class RobotContainer 
 {
 
@@ -30,7 +30,8 @@ public class RobotContainer
 
   public static final SwerveSubsystem swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   	// public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
-
+    public final Limelight m_limeLight = new Limelight();
+    
   public RobotContainer() 
   {
     configureBindings();
@@ -42,7 +43,8 @@ public class RobotContainer
 
   private void configureBindings() 
   {
-    driver.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
+    driver.leftTrigger().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
+    driver.x().onTrue(new LLAlignCommand(true));
     driver.povUp().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2)));
     driver.povDown().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI)));
     driver.povLeft().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI/2)));
