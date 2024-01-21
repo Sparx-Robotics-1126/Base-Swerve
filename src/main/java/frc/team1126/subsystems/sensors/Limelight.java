@@ -17,15 +17,15 @@ public class Limelight extends SubsystemBase {
 	NetworkTableEntry validTarget; // whether or not it has valid target
 	NetworkTableEntry vetricalOff; // vertical offset
 
-	public double velocity; // velocity
-	public double horzontalOffset; // x position
-	public double verticalOffset; // y position
-	public double accel; // acceleration
-	public double timestamp; // timestamp
-    public int targetId; //april tag id
+	private double velocity; // velocity
+	private double horzontalOffset; // x position
+	private double verticalOffset; // y position
+	private double accel; // acceleration
+	private double timestamp; // timestamp
+	private int targetId; //april tag id
 
 	private int angleOnGoalCount;
-	private static double distanceToGoal;
+//	private static double distanceToGoal;
 
 	NetworkTableEntry ledMode;
 	NetworkTableEntry camMode;
@@ -39,7 +39,7 @@ public class Limelight extends SubsystemBase {
 		verticalOffset = 0.0;
 		accel = 0.0;
 		timestamp = 0.0;
-		distanceToGoal = 0.0;
+//		distanceToGoal = 0.0;
 		angleOnGoalCount = 0;
 
 		// 1 if a target is present, or 0 if not.
@@ -127,35 +127,34 @@ public class Limelight extends SubsystemBase {
         return ll_instance;
     }
 
-	public void calculateTargetDistanceInInches() {
-        var targetHeight = 0.0;
+	public double calculateTargetDistanceInInches() {
+		var targetHeight = 0.0;
 
 
-         // distance from the target to the floor
-        switch(targetId)
-        {
-            case 5:{
-               targetHeight = 50.5;
-                break;
-            }
-        }
+		// distance from the target to the floor
+		switch (targetId) {
+			case 5: {
+				targetHeight = 50.5;
+				break;
+			}
+		}
 
-                    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-                    NetworkTableEntry verticalOffset = table.getEntry(VERTICAL_OFFSET);
-                    double targetOffsetAngle_Vertical = verticalOffset.getDouble(0.0);
-                
-                    // how many degrees back is your limelight rotated from perfectly vertical?
-                    double limelightMountAngleDegrees = 25.0; 
-                
-                    // distance from the center of the Limelight lens to the floor
-                    double limelightLensHeightInches = 20.0; 
-                
-                    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
-                    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-                
-                    //calculate distance
-                    distanceToGoal = (targetHeight - limelightLensHeightInches) / Math.tan(angleToGoalRadians);            
-    }
+		NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+		NetworkTableEntry verticalOffset = table.getEntry(VERTICAL_OFFSET);
+		double targetOffsetAngle_Vertical = verticalOffset.getDouble(0.0);
+
+		// how many degrees back is your limelight rotated from perfectly vertical?
+		double limelightMountAngleDegrees = 25.0;
+
+		// distance from the center of the Limelight lens to the floor
+		double limelightLensHeightInches = 20.0;
+
+		double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+		double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+		//calculate distance
+		return (targetHeight - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+	}
 
    /**
    * Gets the already calculated distance from the goal without updating it
@@ -163,15 +162,15 @@ public class Limelight extends SubsystemBase {
    * @return distance
    */
   public double getDistance() {
-    return distanceToGoal;
+    return calculateTargetDistanceInInches();
   }
 
-  public static boolean tooClose() {
-    return distanceToGoal <= 0.0;
+  public  boolean tooClose() {
+    return calculateTargetDistanceInInches() <= 0.0;
   }
 
-  public static boolean tooFar() {
-    return distanceToGoal >= 1.0;
+  public  boolean tooFar() {
+    return calculateTargetDistanceInInches() >= 1.0;
   }
 
 /**
@@ -206,7 +205,7 @@ public class Limelight extends SubsystemBase {
 		} else {
 		  angleOnGoalCount = 0;
 		}
-        SmartDashboard.putNumber("Distance to target", distanceToGoal);
+        SmartDashboard.putNumber("Distance to target", calculateTargetDistanceInInches());
 
 	}
 }

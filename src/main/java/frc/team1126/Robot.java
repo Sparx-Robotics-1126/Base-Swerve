@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    if(Limelight.tooClose() || Limelight.tooFar() ) {
+    if(Limelight.getInstance().tooClose() || Limelight.getInstance().tooFar() ) {
       m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.RED);
     } else {
       m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.GREEN);
