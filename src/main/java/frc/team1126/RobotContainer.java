@@ -6,16 +6,18 @@ package frc.team1126;
 
 import java.io.File;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.team1126.Constants.LimelightConstants;
+import frc.team1126.Constants.SwerveConstants;
 import frc.team1126.commands.Limelight.LLAlignCommand;
 import frc.team1126.commands.drive.DriveFieldRelative;
+import frc.team1126.subsystems.CANdleSubsystem;
 import frc.team1126.subsystems.SwerveSubsystem;
 import frc.team1126.subsystems.sensors.Limelight;
-import frc.team1126.subsystems.sensors.LimelightHelpers;
 public class RobotContainer 
 {
 
@@ -23,19 +25,37 @@ public class RobotContainer
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
+  public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
+
   CommandXboxController driver = new CommandXboxController(Constants.GeneralConstants.DRIVER_CONTROLLER_ID);
   CommandXboxController operator = new CommandXboxController(Constants.GeneralConstants.OPERATOR_CONTROLLER_ID);
+
+  public void EndGameRumble() {
+
+    if(DriverStation.getMatchTime() < SwerveConstants.EndGameSeconds && DriverStation.getMatchTime() > SwerveConstants.StopRumbleSeconds) {
+       
+      driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
+      operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.5);  
+    
+    } else {
+      driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+      operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+      
+    }
+  } 
 
   /* Operator Buttons */
   // private final JoystickButton cubeMode = new JoystickButton(operator.getHID(), XboxController.Button.kStart.value);
   // private final JoystickButton coneMode = new JoystickButton(operator.getHID(), XboxController.Button.kBack.value);
 
-  public static final SwerveSubsystem swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+  public final static SwerveSubsystem swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   	// public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
     public final Limelight m_limeLight = new Limelight();
 
   public RobotContainer() 
   {
+
+    
     configureBindings();
     swerve.setDefaultCommand(new DriveFieldRelative(swerve, 
                                                     () -> driver.getRawAxis(translationAxis),
@@ -55,7 +75,8 @@ public class RobotContainer
     driver.povRight().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 + Math.PI/2)));
     driver.leftBumper().onTrue(new InstantCommand(() -> swerve.setTranslationalScalar(Constants.SwerveConstants.SWERVE_SLOW_TRANSLATION)));
     driver.leftBumper().onFalse(new InstantCommand(() -> swerve.setTranslationalScalar(Constants.SwerveConstants.SWERVE_NORMAL_TRANSLATION)));
-    // 	operator.start().onTrue(new InstantCommand(() ->m_candleSubsystem.setLEDSTate(CANdleSubsystem.LEDState.CONE)));
-		// operator.back().onTrue(new InstantCommand(() -> m_candleSubsystem.setLEDSTate(CANdleSubsystem.LEDState.CUBE)));
+    operator.start().onTrue(new InstantCommand(() ->m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CONE)));
+		operator.back().onTrue(new InstantCommand(() -> m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CUBE)));
+    operator.x().onTrue(new InstantCommand(() ->  operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0)));
   }
 }

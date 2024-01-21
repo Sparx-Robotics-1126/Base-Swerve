@@ -1,12 +1,9 @@
 package frc.team1126.subsystems;
 
 import com.ctre.phoenix.led.*;
-import com.ctre.phoenix.led.CANdle.LEDStripType;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team1126.Constants.CANdleConstants;
 
@@ -52,13 +49,13 @@ public class CANdleSubsystem extends SubsystemBase {
 		m_candle.clearAnimation(0);
 
 		if (DriverStation.getAlliance() == Alliance.Blue) {
-			setLEDSTate(LEDState.BLU);
+			setLEDState(LEDState.BLU);
 		} else {
-			setLEDSTate(LEDState.RED);
+			setLEDState(LEDState.RED);
 		}
     }
 
-    public void setLEDSTate(LEDState state) {
+    public void setLEDState(LEDState state) {
 
 
         ledstate = state;
@@ -89,7 +86,8 @@ public class CANdleSubsystem extends SubsystemBase {
         CUBE(CANdleConstants.PURPLE_R, CANdleConstants.PURPLE_G, CANdleConstants.PURPLE_B),
         CONE(CANdleConstants.YELLOW_R, CANdleConstants.YELLOW_G, CANdleConstants.YELLOW_B),
         RED(CANdleConstants.RED_R, CANdleConstants.RED_G, CANdleConstants.RED_B),
-		BLU(CANdleConstants.BLUE_R, CANdleConstants.BLUE_G, CANdleConstants.BLUE_B);
+		BLU(CANdleConstants.BLUE_R, CANdleConstants.BLUE_G, CANdleConstants.BLUE_B),
+        GREEN(CANdleConstants.GREEN_R, CANdleConstants.GREEN_G, CANdleConstants.GREEN_B);
 
         public final int r;
         public final int g;
@@ -151,6 +149,10 @@ public class CANdleSubsystem extends SubsystemBase {
 
             case PurpleColorFlow:
                 m_toAnimate =  new ColorFlowAnimation(100,0,255, 0, 0.7, LedCount, ColorFlowAnimation.Direction.Forward);
+                break;
+            case Empty:
+                break;
+            default:
                 break;
         }
         System.out.println("Changed to " + m_currentAnimation.toString());

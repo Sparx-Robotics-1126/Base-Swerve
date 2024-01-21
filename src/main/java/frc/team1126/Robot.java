@@ -8,10 +8,14 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team1126.commands.auto.Autos;
+import frc.team1126.subsystems.CANdleSubsystem;
+import frc.team1126.subsystems.sensors.Limelight;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
   public static RobotContainer robotContainer;
+  public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
+
 
   @Override
   public void robotInit() {
@@ -22,6 +26,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    if(Limelight.tooClose() || Limelight.tooFar() ) {
+      m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.RED);
+    } else {
+      m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.GREEN);
+    }
   }
 
   @Override

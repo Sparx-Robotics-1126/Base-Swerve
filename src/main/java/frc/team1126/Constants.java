@@ -68,6 +68,23 @@ public static final int BLUE_B = 255;
   public static final PIDGains kLLAlignDriveGains = new PIDGains(.025, 0.0015, 0.0005);
   public static final double kAlignDriveMotionSmoothing = 0;
   public static final double kAlignStrafeMotionSmoothing = 0;
+
+  public static final double SPEAKER_HEIGHT = 78.0; // height needs to be changed
+		public static final double AMP_HEIGHT = 26.0;
+		public static final double LIMELIGHT_HEIGHT = 44; // measured from bottom of bumper to bottom of limelight
+		public static final double INITIAL_ANGLE = 0;
+		public static final double VISION_ANGLE_TOLERANCE = 0;
+		public static final double APRILTAG_PIPELINE = 0;
+		public static final String LIMELIGHT_NAME = "";
+
+		public static final String LIMELIGHT_TABLE_KEY = "limelight";
+		public static final String HORIZONTAL_OFFSET = "tx";
+		public static final String HAS_VALID_TARGETS = "tv";
+		public static final String VERTICAL_OFFSET = "ty";
+		public static final String TARGET_AREA = "ta";
+		public static final String LIMELIGHT_SKEW = "ts";
+		public static final String LED_MODE = "ledMode";
+		public static final String CAM_MODE = "camMode";
 }
     /* Field related constants */
     public static final class FieldConstants {
@@ -106,6 +123,7 @@ public static final int BLUE_B = 255;
               new Pose2d(new Translation2d(1.598, 0.5), Rotation2d.fromRadians(-Math.PI)));
     }
   
+    
     /** General robot constants */
     public static final class GeneralConstants {
 
@@ -139,6 +157,10 @@ public static final int BLUE_B = 255;
       public static final boolean HEADING_CORRECTION = false;
 
       public static final boolean CHASSIS_VELOCITY_CORRECTION = false;
+     
+      //for endgame rumble feature
+      public static final int EndGameSeconds = 30;
+      public static final int StopRumbleSeconds = 28;
     }
   
     /** Constants revolving around the vision subsystem. */

@@ -3,7 +3,6 @@ package frc.lib.swervelib.parser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.util.Units;
 import java.io.File;
 import java.io.IOException;

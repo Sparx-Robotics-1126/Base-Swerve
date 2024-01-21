@@ -12,7 +12,6 @@ import frc.lib.swervelib.imu.ADXRS450Swerve;
 import frc.lib.swervelib.imu.AnalogGyroSwerve;
 import frc.lib.swervelib.imu.NavXSwerve;
 import frc.lib.swervelib.imu.Pigeon2Swerve;
-import frc.lib.swervelib.imu.PigeonSwerve;
 import frc.lib.swervelib.imu.SwerveIMU;
 import frc.lib.swervelib.motors.SparkMaxBrushedMotorSwerve;
 import frc.lib.swervelib.motors.SparkMaxSwerve;
