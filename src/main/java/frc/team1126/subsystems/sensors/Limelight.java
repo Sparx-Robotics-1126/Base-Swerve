@@ -9,7 +9,10 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.Toolbox.AprilTag;
 import frc.team1126.Constants.LimelightConstants;
+
+import static frc.team1126.Constants.AprilTags.*;
 import static frc.team1126.Constants.LimelightConstants.*;
 
 public class Limelight extends SubsystemBase {
@@ -23,17 +26,19 @@ public class Limelight extends SubsystemBase {
 	private double accel; // acceleration
 	private double timestamp; // timestamp
 	private int targetId; //april tag id
-
+	private final NetworkTable table;
 	private int angleOnGoalCount;
 //	private static double distanceToGoal;
 
 	NetworkTableEntry ledMode;
 	NetworkTableEntry camMode;
 	private static Limelight ll_instance = null;
+
 	
 	public Limelight() {
-		NetworkTable table = NetworkTableInstance.getDefault().getTable(LIMELIGHT_TABLE_KEY);
-		
+
+		table = NetworkTableInstance.getDefault().getTable(LIMELIGHT_TABLE_KEY);
+
 		velocity = 0.0;
 		horzontalOffset = 0.0;
 		verticalOffset = 0.0;
@@ -50,6 +55,7 @@ public class Limelight extends SubsystemBase {
 
 		// The Y offset of the target in degrees from the crosshair.
 		vetricalOff = table.getEntry(VERTICAL_OFFSET);
+		verticalOffset = vetricalOff.getDouble(0);
 
 		ledMode = table.getEntry(LED_MODE);
 		camMode = table.getEntry(CAM_MODE);
@@ -128,33 +134,81 @@ public class Limelight extends SubsystemBase {
     }
 
 	public double calculateTargetDistanceInInches() {
-		var targetHeight = 0.0;
 
+		var tag = getAprilTag(targetId);
 
-		// distance from the target to the floor
-		switch (targetId) {
-			case 5: {
-				targetHeight = 50.5;
-				break;
-			}
-		}
-
-		NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-		NetworkTableEntry verticalOffset = table.getEntry(VERTICAL_OFFSET);
-		double targetOffsetAngle_Vertical = verticalOffset.getDouble(0.0);
+//		NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+//		NetworkTableEntry verticalOffset = table.getEntry(VERTICAL_OFFSET);
+//		double targetOffsetAngle_Vertical = verticalOffset;
 
 		// how many degrees back is your limelight rotated from perfectly vertical?
-		double limelightMountAngleDegrees = 25.0;
+//		double limelightMountAngleDegrees = 25.0;
 
 		// distance from the center of the Limelight lens to the floor
-		double limelightLensHeightInches = 20.0;
+//		double limelightLensHeightInches =CAMERA_MIN_FLOOR_HEIGHT;
 
-		double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+		double angleToGoalDegrees = getCameraPitch() + verticalOffset;
 		double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
 
 		//calculate distance
-		return (targetHeight - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+		return (tag.position.getY() - getCameraHeight()) / Math.tan(angleToGoalRadians);
 	}
+private AprilTag getAprilTag(Integer targetId) {
+
+	switch (targetId) {
+		case SOURCE_RIGHT_BLUE_ID: {
+			return TAG_MAP.get(SOURCE_RIGHT_BLUE_ID);
+		}
+		case SOURCE_LEFT_BLUE_ID: {
+			return TAG_MAP.get(SOURCE_LEFT_BLUE_ID);
+		}
+		case SOURCE_RIGHT_RED_ID: {
+			return TAG_MAP.get(SOURCE_RIGHT_RED_ID);
+		}
+		case SOURCE_LEFT_RED_ID: {
+			return TAG_MAP.get(SOURCE_LEFT_RED_ID);
+		}
+		case SPEAKER_1_BLUE_ID: {
+			return TAG_MAP.get(SPEAKER_1_BLUE_ID);
+		}
+		case SPEAKER_2_BLUE_ID: {
+			return TAG_MAP.get(SPEAKER_2_BLUE_ID);
+		}
+		case SPEAKER_1_RED_ID: {
+			return TAG_MAP.get(SPEAKER_1_RED_ID);
+		}
+		case SPEAKER_2_RED_ID: {
+			return TAG_MAP.get(SPEAKER_2_RED_ID);
+		}
+		case AMP_BLUE_ID: {
+			return TAG_MAP.get(AMP_BLUE_ID);
+		}
+		case AMP_RED_ID: {
+			return TAG_MAP.get(AMP_RED_ID);
+		}
+		case STAGE_1_BLUE_ID: {
+			return TAG_MAP.get(STAGE_1_BLUE_ID);
+		}
+		case STAGE_2_BLUE_ID: {
+			return TAG_MAP.get(STAGE_2_BLUE_ID);
+		}
+		case STAGE_1_RED_ID: {
+			return TAG_MAP.get(STAGE_1_RED_ID);
+		}
+		case STAGE_2_RED_ID: {
+			return TAG_MAP.get(STAGE_2_RED_ID);
+		}
+		case STAGE_3_BLUE_ID: {
+			return TAG_MAP.get(STAGE_3_BLUE_ID);
+		}
+		case STAGE_3_RED_ID: {
+			return TAG_MAP.get(STAGE_3_RED_ID);
+		}
+		default: {
+			return null;
+		}
+	}
+}
 
    /**
    * Gets the already calculated distance from the goal without updating it

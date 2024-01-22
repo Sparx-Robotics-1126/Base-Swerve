@@ -11,32 +11,144 @@ import edu.wpi.first.math.util.Units;
 import frc.lib.Toolbox.AprilTag;
 import frc.lib.Toolbox.PIDGains;
 
+import java.util.HashMap;
 import java.util.List;
 public final class Constants {
 
-    public static class AprilTags{
-        public static final int SourceRightBlueId = 1;
-        public static final int SourceLeftBlueID = 2;
-        public static final int SourceRightRedID = 9;
-        public static final int SourceLeftRedID = 10;
-        public static final int Speaker1RedId = 4;
-        public static final int Speaker1BlueId = 7;
-        public static final int Speaker2RedId = 3;
-        public static final int Speaker2BlueId = 8;
-        public static final int AmpRedId = 5;
-        public static final int AmpBlueId = 6;
-        public static final int Stage1RedId = 12;
-        public static final int Stage2RedId = 11;
-        public static final int Stage3RedId = 13;
-        public static final int Stage1BlueId = 15;
-
-        public static final int Stage2BlueId = 14;
-
-        public static final int Stage3BlueId = 16;
+    public static class AprilTags {
+        public static final int SOURCE_RIGHT_BLUE_ID = 1;
+        public static final int SOURCE_LEFT_BLUE_ID = 2;
+        public static final int SOURCE_RIGHT_RED_ID = 9;
+        public static final int SOURCE_LEFT_RED_ID = 10;
+        public static final int SPEAKER_1_RED_ID = 4;
+        public static final int SPEAKER_1_BLUE_ID = 7;
+        public static final int SPEAKER_2_RED_ID = 3;
+        public static final int SPEAKER_2_BLUE_ID = 8;
+        public static final int AMP_RED_ID = 5;
+        public static final int AMP_BLUE_ID = 6;
+        public static final int STAGE_1_RED_ID = 12;
+        public static final int STAGE_2_RED_ID = 11;
+        public static final int STAGE_3_RED_ID = 13;
+        public static final int STAGE_1_BLUE_ID = 15;
+        public static final int STAGE_2_BLUE_ID = 14;
+        public static final int STAGE_3_BLUE_ID = 16;
         public AprilTag[] tags = new AprilTag[16];
-
-
-
+        public static final HashMap<Integer, AprilTag> TAG_MAP = new HashMap<Integer, AprilTag>() {
+            {
+                put(SOURCE_RIGHT_BLUE_ID, new AprilTag() {
+                    {
+                        id = SOURCE_RIGHT_BLUE_ID;
+                        name = "Source Right Blue";
+                        position = new Pose2d(new Translation2d(19.375, 48.125), Rotation2d.fromDegrees(0.0));
+                    }
+                });
+                put(SOURCE_LEFT_BLUE_ID, new AprilTag() {
+                    {
+                        id = SOURCE_LEFT_BLUE_ID;
+                        name = "Source Left Blue";
+                        position = new Pose2d(new Translation2d(-19.375, 48.125), Rotation2d.fromDegrees(0.0));
+                    }
+                });
+                put(SOURCE_RIGHT_RED_ID, new AprilTag() {
+                    {
+                        id = SOURCE_RIGHT_RED_ID;
+                        name = "Source Right Red";
+                        position = new Pose2d(new Translation2d(19.375, 48.125), Rotation2d.fromRadians(0.0));
+                    }
+                });
+                put(SOURCE_LEFT_RED_ID, new AprilTag() {
+                    {
+                        id = SOURCE_LEFT_RED_ID;
+                        name = "Source Left Red";
+                        position = new Pose2d(new Translation2d(-19.375, 48.125), Rotation2d.fromRadians(0.0));
+                    }
+                });
+                put(SPEAKER_1_RED_ID, new AprilTag() {
+                    {
+                        id = SPEAKER_1_RED_ID;
+                        name = "Speaker 1 Red";
+                        position = new Pose2d(new Translation2d(0,56.875), Rotation2d.fromRadians(0.0));
+                    }
+                });
+                put(SPEAKER_1_BLUE_ID, new AprilTag() {
+                    {
+                        id = SPEAKER_1_BLUE_ID;
+                        name = "Speaker 1 Blue";
+                        position = new Pose2d(new Translation2d(0,56.875), Rotation2d.fromDegrees(0.0));
+                    }
+                });
+                put(SPEAKER_2_RED_ID, new AprilTag() {
+                    {
+                        id = SPEAKER_2_RED_ID;
+                        name = "Speaker 2 Red";
+                        position = new Pose2d(new Translation2d(17, 56.875), Rotation2d.fromRadians(0.0));
+                    }
+                });
+                put(SPEAKER_2_BLUE_ID, new AprilTag() {
+                    {
+                        id = SPEAKER_2_BLUE_ID;
+                        name = "Speaker 2 Blue";
+                        position = new Pose2d(new Translation2d(17, 56.875), Rotation2d.fromDegrees(0.0));
+                    }
+                });
+                put(AMP_RED_ID, new AprilTag() {
+                    {
+                        id = AMP_RED_ID;
+                        name = "Amp Red";
+                        position = new Pose2d(new Translation2d(0, 48.125), Rotation2d.fromRadians(0.0));
+                    }
+                });
+                put(AMP_BLUE_ID, new AprilTag() {
+                    {
+                        id = AMP_BLUE_ID;
+                        name = "Amp Blue";
+                        position = new Pose2d(new Translation2d(0, 48.125), Rotation2d.fromDegrees(0.0));
+                    }
+                });
+                put(STAGE_1_RED_ID, new AprilTag() {
+                    {
+                        id = STAGE_1_RED_ID;
+                        name = "Stage 1 Red";
+                        position = new Pose2d(new Translation2d(0, 47.5), Rotation2d.fromRadians(0.0));
+                    }
+                });
+                put(STAGE_2_RED_ID, new AprilTag() {
+                    {
+                        id = STAGE_2_RED_ID;
+                        name = "Stage 2 Red";
+                        position = new Pose2d(new Translation2d(0, 47.5), Rotation2d.fromRadians(0.0));
+                    }
+                });
+                put(STAGE_3_RED_ID, new AprilTag() {
+                    {
+                        id = STAGE_3_RED_ID;
+                        name = "Stage 3 Red";
+                        position = new Pose2d(new Translation2d(0, 47.5), Rotation2d.fromRadians(0.0));
+                    }
+                });
+                put(STAGE_1_BLUE_ID, new AprilTag() {
+                    {
+                        id = STAGE_1_BLUE_ID;
+                        name = "Stage 1 Blue";
+                        position = new Pose2d(new Translation2d(0, 47.5), Rotation2d.fromDegrees(0.0));
+                    }
+                });
+                put(STAGE_2_BLUE_ID, new AprilTag() {
+                    {
+                        id = STAGE_2_BLUE_ID;
+                        name = "Stage 2 Blue";
+                        position = new Pose2d(new Translation2d(0, 47.5), Rotation2d.fromDegrees(0.0));
+                    }
+                });
+                put(STAGE_3_BLUE_ID, new AprilTag() {
+                    {
+                        id = STAGE_3_BLUE_ID;
+                        name = "Stage 3 Blue";
+                        position = new Pose2d(new Translation2d(0, 47.5), Rotation2d.fromDegrees(0.0));
+                    }
+                });
+            }
+        };
     }
 
     public static class CANdleConstants {
@@ -74,7 +186,7 @@ public final class Constants {
         public static final boolean USE_FOR_TARGETING = true;
         public static final boolean LED_ON_DEFAULT = false;
         public static final double CAMERA_MIN_FLOOR_HEIGHT = 113.03;
-        public static final double CAMERA_INITIAL_PITCH = 0;
+        public static final double CAMERA_INITIAL_PITCH = 25;
         // declare ID's of pipelines here
         public static final int kCubePipeline = 0;
         public static final int kReflectivePipeline = 1;
