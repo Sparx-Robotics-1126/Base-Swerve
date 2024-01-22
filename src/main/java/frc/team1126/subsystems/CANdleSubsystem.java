@@ -1,11 +1,16 @@
 package frc.team1126.subsystems;
 
+import java.util.Optional;
+
 import com.ctre.phoenix.led.*;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+//import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team1126.Constants.CANdleConstants;
+
+import static edu.wpi.first.wpilibj.DriverStation.Alliance.*;
 
 public class CANdleSubsystem extends SubsystemBase {
     private final CANdle m_candle = new CANdle(CANdleConstants.CANdleID);
@@ -48,11 +53,11 @@ public class CANdleSubsystem extends SubsystemBase {
 
 		m_candle.clearAnimation(0);
 
-		if (DriverStation.getAlliance() == Alliance.Blue) {
-			setLEDState(LEDState.BLU);
-		} else {
-			setLEDState(LEDState.RED);
-		}
+		 if (DriverStation.getAlliance().get() == Blue) {
+		 	setLEDState(LEDState.BLU);
+		 } else {
+		 	setLEDState(LEDState.RED);
+		 }
     }
 
     public void setLEDState(LEDState state) {

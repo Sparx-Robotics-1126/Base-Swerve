@@ -7,14 +7,14 @@ package frc.team1126.commands.Limelight;
 
 // import edu.wpi.first.math.controller.PIDController;
 // import edu.wpi.first.math.geometry.Translation2d;
-// import edu.wpi.first.wpilibj2.command.CommandBase;
+// import edu.wpi.first.wpilibj2.command.Command;
 
 // import frc.team1126.Constants.LimelightConstants;
 // import frc.team1126.sensors.LimelightHelpers;
 // import frc.team1126.RobotContainer;
 // import frc.team1126.subsystems.SwerveSubsystem;
 
-// public class LLTargetCommand extends CommandBase {
+// public class LLTargetCommand extends Command {
 
 // 	private static SwerveSubsystem driveSubsystem;
 

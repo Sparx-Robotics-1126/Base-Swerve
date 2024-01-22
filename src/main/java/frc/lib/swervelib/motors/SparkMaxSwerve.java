@@ -2,12 +2,16 @@ package frc.lib.swervelib.motors;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+// import com.revrobotics.CANSparkMax.ControlType;
+// import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import frc.lib.swervelib.encoders.SwerveAbsoluteEncoder;
 import frc.lib.swervelib.parser.PIDFConfig;
 
@@ -32,7 +36,7 @@ public class SparkMaxSwerve extends SwerveMotor
   /**
    * Closed-loop PID controller.
    */
-  public  SparkMaxPIDController pid;
+  public  SparkPIDController pid;
   /**
    * Factory default already occurred.
    */

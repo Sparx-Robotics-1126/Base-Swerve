@@ -8,13 +8,13 @@ package frc.team1126.commands.Limelight;
 // import edu.wpi.first.math.controller.PIDController;
 // import edu.wpi.first.math.controller.ProfiledPIDController;
 // import edu.wpi.first.math.trajectory.TrapezoidProfile;
-// import edu.wpi.first.wpilibj2.command.CommandBase;
+// import edu.wpi.first.wpilibj2.command.Command;
 // import frc.team1126.RobotContainer;
 // import frc.team1126.Constants.LimelightConstants;
 // import frc.lib.Toolbox.DoubleSmoother;
 // import frc.team1126.sensors.LimelightHelpers;
 // import frc.team1126.subsystems.SwerveSubsystem;
-// public class LLPuppydogCommand extends CommandBase {
+// public class LLPuppydogCommand extends Command {
 
 // 	private static SwerveSubsystem driveSubsystem;
 

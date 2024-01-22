@@ -7,7 +7,7 @@ package frc.team1126.commands.Limelight;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.Toolbox.DoubleSmoother;
 import frc.team1126.RobotContainer;
 import frc.team1126.Constants.LimelightConstants;
@@ -16,7 +16,7 @@ import frc.team1126.subsystems.SwerveSubsystem;
 import frc.team1126.subsystems.sensors.Limelight;
 import frc.team1126.subsystems.sensors.LimelightHelpers;
 
-public class LLAlignCommand extends CommandBase {
+public class LLAlignCommand extends Command {
 
 	private static SwerveSubsystem driveSubsystem;
 

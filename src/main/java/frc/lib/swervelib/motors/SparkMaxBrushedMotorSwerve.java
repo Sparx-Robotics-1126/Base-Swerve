@@ -1,15 +1,18 @@
 package frc.lib.swervelib.motors;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.revrobotics.ControlType;
+// import com.revrobotics.CANSpark.ControlType;
+// import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder.Type;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.SparkRelativeEncoder.Type;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.lib.swervelib.encoders.SwerveAbsoluteEncoder;
 import frc.lib.swervelib.motors.SparkMaxSwerve.SparkMAX_slotIdx;
@@ -37,7 +40,7 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor
   /**
    * Closed-loop PID controller.
    */
-  public  SparkMaxPIDController pid;
+  public  SparkPIDController pid;
   /**
    * Factory default already occurred.
    */
@@ -337,11 +340,11 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor
   {
     int pidSlot =
         isDriveMotor ? SparkMAX_slotIdx.Velocity.ordinal() : SparkMAX_slotIdx.Position.ordinal();
-    pid.setReference(
-        setpoint,
-        isDriveMotor ? ControlType.kVelocity : ControlType.kPosition,
-        pidSlot,
-        feedforward);
+    pid.setReference(setpoint,
+    isDriveMotor ? com.revrobotics.CANSparkBase.ControlType.kVelocity: com.revrobotics.CANSparkBase.ControlType.kPosition,
+    pidSlot,
+    feedforward);
+   
   }
 
   /**

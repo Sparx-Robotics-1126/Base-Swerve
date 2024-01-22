@@ -1,6 +1,6 @@
 package frc.lib.swervelib.parser.json;
 
-import com.revrobotics.SparkMaxRelativeEncoder.Type;
+import com.revrobotics.SparkRelativeEncoder.Type;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import frc.lib.swervelib.encoders.AnalogAbsoluteEncoderSwerve;
 import frc.lib.swervelib.encoders.CANCoderSwerve;

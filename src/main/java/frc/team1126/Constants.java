@@ -1,6 +1,6 @@
 package frc.team1126;
 
-import com.pathplanner.lib.PathConstraints;
+// import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -13,6 +13,8 @@ import frc.lib.Toolbox.PIDGains;
 
 import java.util.HashMap;
 import java.util.List;
+
+import com.pathplanner.lib.path.PathConstraints;
 public final class Constants {
 
     public static class AprilTags {
@@ -321,15 +323,15 @@ public final class Constants {
     /**
      * Constants revolving around auton modes.
      */
-    public static final class AutonConstants {
+    // public static final class AutonConstants {
 
-        public static final double MAX_VELOCITY = 3.0;
-        public static final double MAX_ACCELERATION = 2.0;
-        public static final PathConstraints CONSTRAINTS =
-                new PathConstraints(AutonConstants.MAX_VELOCITY, AutonConstants.MAX_ACCELERATION);
+    //     public static final double MAX_VELOCITY = 3.0;
+    //     public static final double MAX_ACCELERATION = 2.0;
+    //     public static final PathConstraints CONSTRAINTS =
+    //             new PathConstraints(AutonConstants.MAX_VELOCITY, AutonConstants.MAX_ACCELERATION);
 
-        public static final double XY_CONTROLLER_P = 4;
-        public static final double THETA_CONTROLLER_P = 1;
-    }
+    //     public static final double XY_CONTROLLER_P = 4;
+    //     public static final double THETA_CONTROLLER_P = 1;
+    // }
 }
   

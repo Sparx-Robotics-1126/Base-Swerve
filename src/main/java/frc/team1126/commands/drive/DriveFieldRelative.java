@@ -5,13 +5,13 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.swervelib.SwerveController;
 import frc.team1126.Constants;
 import frc.team1126.RobotContainer;
 import frc.team1126.subsystems.SwerveSubsystem;
 
-public class DriveFieldRelative extends CommandBase{
+public class DriveFieldRelative extends Command{
     private final SwerveSubsystem  swerve;
     private final DoubleSupplier   vX;
     private final DoubleSupplier   vY;

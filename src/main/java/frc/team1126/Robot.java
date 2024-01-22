@@ -7,7 +7,7 @@ package frc.team1126;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team1126.commands.auto.Autos;
+// import frc.team1126.commands.auto.Autos;
 import frc.team1126.subsystems.CANdleSubsystem;
 import frc.team1126.subsystems.sensors.Limelight;
 
@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     robotContainer = new RobotContainer();
-    Autos.init();
+    // Autos.init();
   }
 
   @Override
@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    autonomousCommand = Autos.getAutonomousCommand();
+    // autonomousCommand = Autos.getAutonomousCommand();
 
     if (autonomousCommand != null) autonomousCommand.schedule();
   }
