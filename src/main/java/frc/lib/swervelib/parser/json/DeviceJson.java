@@ -16,8 +16,8 @@ import frc.lib.swervelib.imu.SwerveIMU;
 import frc.lib.swervelib.motors.SparkMaxBrushedMotorSwerve;
 import frc.lib.swervelib.motors.SparkMaxSwerve;
 import frc.lib.swervelib.motors.SwerveMotor;
-import frc.lib.swervelib.motors.TalonFXSwerve;
-import frc.lib.swervelib.motors.TalonSRXSwerve;
+// import frc.lib.swervelib.motors.TalonFXSwerve;
+// import frc.lib.swervelib.motors.TalonSRXSwerve;
 
 /**
  * Device JSON parsed class. Used to access the JSON data.
@@ -135,10 +135,10 @@ public class DeviceJson
       case "sparkmax":
         return new SparkMaxSwerve(id, isDriveMotor);
       case "falcon":
-      case "talonfx":
-        return new TalonFXSwerve(id, canbus != null ? canbus : "", isDriveMotor);
-      case "talonsrx":
-        return new TalonSRXSwerve(id, isDriveMotor);
+      // case "talonfx":
+      //   return new TalonFXSwerve(id, canbus != null ? canbus : "", isDriveMotor);
+      // case "talonsrx":
+      //   return new TalonSRXSwerve(id, isDriveMotor);
       default:
         throw new RuntimeException(type + " is not a recognized absolute encoder type.");
     }

@@ -187,8 +187,8 @@ public final class Constants {
     public static class LimelightConstants {
         public static final boolean USE_FOR_TARGETING = true;
         public static final boolean LED_ON_DEFAULT = false;
-        public static final double CAMERA_MIN_FLOOR_HEIGHT = 113.03;
-        public static final double CAMERA_INITIAL_PITCH = 25;
+        public static final double CAMERA_MIN_FLOOR_HEIGHT = 15;
+        public static final double CAMERA_INITIAL_PITCH = 27.7;
         // declare ID's of pipelines here
         public static final int kCubePipeline = 0;
         public static final int kReflectivePipeline = 1;

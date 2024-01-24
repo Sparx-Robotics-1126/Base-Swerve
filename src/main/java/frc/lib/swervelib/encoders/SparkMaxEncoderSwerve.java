@@ -2,7 +2,10 @@ package frc.lib.swervelib.encoders;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+// import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
+
+// import com.revrobotics.AbsoluteEncoder.Type;
 import frc.lib.swervelib.motors.SwerveMotor;
 
 /**

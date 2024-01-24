@@ -46,6 +46,7 @@ public class Limelight extends SubsystemBase {
 		timestamp = 0.0;
 //		distanceToGoal = 0.0;
 		angleOnGoalCount = 0;
+		targetId = -1;
 
 		// 1 if a target is present, or 0 if not.
 		validTarget = table.getEntry(HAS_VALID_TARGETS);
@@ -134,7 +135,8 @@ public class Limelight extends SubsystemBase {
     }
 
 	public double calculateTargetDistanceInInches() {
-
+        var targetFound = table.getEntry(HAS_VALID_TARGETS).getBoolean(true);
+		if(targetId > 0){
 		var tag = getAprilTag(targetId);
 
 //		NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -152,6 +154,8 @@ public class Limelight extends SubsystemBase {
 
 		//calculate distance
 		return (tag.position.getY() - getCameraHeight()) / Math.tan(angleToGoalRadians);
+		}
+		return 0;
 	}
 private AprilTag getAprilTag(Integer targetId) {
 
@@ -220,18 +224,29 @@ private AprilTag getAprilTag(Integer targetId) {
   }
 
   public  boolean tooClose() {
-    return calculateTargetDistanceInInches() <= 0.0;
+    return calculateTargetDistanceInInches() <= 20.0;
   }
 
   public  boolean tooFar() {
-    return calculateTargetDistanceInInches() >= 1.0;
+    return calculateTargetDistanceInInches() >= 115.0;
   }
 
+  public  boolean inRange() {
+	if (calculateTargetDistanceInInches() <115 & calculateTargetDistanceInInches()>20){
+		return true;
+	}
+    return false;
+  }
 /**
    * returns if there is a target detected by the limelight
    */
   public boolean hasTarget() {
-    return validTarget.getBoolean(false);
+	if(targetId >0){
+		return true;
+	}
+	return false;
+	
+    // return validTarget.getBoolean(false);
   }
 
   public Pose3d getRobotPoseInTargetSpace() {
@@ -246,13 +261,14 @@ private AprilTag getAprilTag(Integer targetId) {
 	@Override
 	public void periodic() {
 		super.periodic();
+			// 1 if a target is present, or 0 if not.
+			validTarget = table.getEntry(HAS_VALID_TARGETS);
 		velocity = NetworkTableInstance.getDefault().getTable(LIMELIGHT_TABLE_KEY).getEntry(HAS_VALID_TARGETS).getDouble(0);
 		horzontalOffset = -1.0 * NetworkTableInstance.getDefault().getTable(LIMELIGHT_TABLE_KEY).getEntry(HORIZONTAL_OFFSET).getDouble(0);
 		verticalOffset = NetworkTableInstance.getDefault().getTable(LIMELIGHT_TABLE_KEY).getEntry(VERTICAL_OFFSET).getDouble(0);
 		accel = NetworkTableInstance.getDefault().getTable(LIMELIGHT_TABLE_KEY).getEntry(TARGET_AREA).getDouble(0);
 		accel = NetworkTableInstance.getDefault().getTable(LIMELIGHT_TABLE_KEY).getEntry(LIMELIGHT_SKEW).getDouble(0);
         targetId =(int)  NetworkTableInstance.getDefault().getTable(LIMELIGHT_TABLE_KEY).getEntry("tid").getInteger(0);
-		calculateTargetDistanceInInches();
 
 		if (Math.abs(horzontalOffset) <= LimelightConstants.VISION_ANGLE_TOLERANCE) {
 		  angleOnGoalCount++;
@@ -260,6 +276,7 @@ private AprilTag getAprilTag(Integer targetId) {
 		  angleOnGoalCount = 0;
 		}
         SmartDashboard.putNumber("Distance to target", calculateTargetDistanceInInches());
+		SmartDashboard.putBoolean("Has Target", hasTarget());
 
 	}
 }
