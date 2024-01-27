@@ -16,7 +16,7 @@ import frc.team1126.Constants.SwerveConstants;
 //import frc.team1126.commands.Limelight.LLAlignCommand;
 //import frc.team1126.commands.drive.DriveFieldRelative;
 import frc.team1126.commands.drivebase.AbsoluteDriveAdv;
-import frc.team1126.subsystems.CANdleSubsystem;
+// import frc.team1126.subsystems.CANdleSubsystem;
 import frc.team1126.subsystems.SwerveSubsystem;
 import frc.team1126.subsystems.sensors.Limelight;
 import frc.team1126.Constants.OIConstants;
@@ -28,10 +28,9 @@ public class RobotContainer
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
-  public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
+  // public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
 
-  public static final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-          "swerve/neo"));
+  public static final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),   "swerve"));
 
   XboxController driverXbox = new XboxController(0);
 
@@ -97,8 +96,8 @@ public class RobotContainer
 //    driver.povRight().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 + Math.PI/2)));
 //    driver.leftBumper().onTrue(new InstantCommand(() -> swerve.setTranslationalScalar(Constants.SwerveConstants.SWERVE_SLOW_TRANSLATION)));
 //    driver.leftBumper().onFalse(new InstantCommand(() -> swerve.setTranslationalScalar(Constants.SwerveConstants.SWERVE_NORMAL_TRANSLATION)));
-    operator.start().onTrue(new InstantCommand(() ->m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CONE)));
-		operator.back().onTrue(new InstantCommand(() -> m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CUBE)));
+    // operator.start().onTrue(new InstantCommand(() ->m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CONE)));
+		// operator.back().onTrue(new InstantCommand(() -> m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CUBE)));
     operator.x().onTrue(new InstantCommand(() ->  operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0)));
   }
 

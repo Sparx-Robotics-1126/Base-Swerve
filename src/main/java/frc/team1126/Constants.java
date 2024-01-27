@@ -316,7 +316,7 @@ public final class Constants {
 
         public static final double DT_CONSTANT = 0.1;
 
-        public static final boolean HEADING_CORRECTION = false;
+        public static final boolean HEADING_CORRECTION = true;
 
         public static final boolean CHASSIS_VELOCITY_CORRECTION = false;
 
