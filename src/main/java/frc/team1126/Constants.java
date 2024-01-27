@@ -15,8 +15,27 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.pathplanner.lib.path.PathConstraints;
+import frc.lib.swervelib.math.Matter;
+
 public final class Constants {
 
+    public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
+    public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+    public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
+    public static final class OIConstants {
+        public static final int kDriverControllerPort = 0;
+        public static final double kDriveDeadband = 0.05;
+    }
+
+    public static class OperatorConstants
+    {
+
+        // Joystick Deadband
+        public static final double LEFT_X_DEADBAND  = 0.05;
+        public static final double LEFT_Y_DEADBAND  = 0.05;
+        public static final double RIGHT_X_DEADBAND = 0.05;
+        public static final double TURN_CONSTANT    = 6;
+    }
     public static class AprilTags {
         public static final int SOURCE_RIGHT_BLUE_ID = 1;
         public static final int SOURCE_LEFT_BLUE_ID = 2;
@@ -202,8 +221,8 @@ public final class Constants {
         public static final double kPuppyTurnMotionSmoothing = 0.3;
         public static final double kPuppyDriveMotionSmoothing = 0.4;
 
-        public static final PIDGains kLLAlignStrafeGains = new PIDGains(.04, 0.0015, 0.001);
-        public static final PIDGains kLLAlignDriveGains = new PIDGains(.025, 0.0015, 0.0005);
+        public static final PIDGains kLLAlignStrafeGains = new PIDGains(.04, 0.0015, 0.001); //.04
+        public static final PIDGains kLLAlignDriveGains = new PIDGains(.008, 0.0015, 0.0005); //.025
         public static final double kAlignDriveMotionSmoothing = 0;
         public static final double kAlignStrafeMotionSmoothing = 0;
 

@@ -1,48 +1,44 @@
 package frc.lib.swervelib.encoders;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.revrobotics.SparkAnalogSensor;
+import com.revrobotics.SparkAnalogSensor.Mode;
 import java.util.function.Supplier;
-
 import frc.lib.swervelib.motors.SwerveMotor;
-// import swervelib.motors.SwerveMotor;
-// import swervelib.telemetry.Alert;
 import frc.lib.swervelib.telemetry.Alert;
 
 /**
- * SparkMax absolute encoder, attached through the data port.
+ * SparkMax absolute encoder, attached through the data port analog pin.
  */
-public class SparkMaxEncoderSwerve extends SwerveAbsoluteEncoder
+public class SparkMaxAnalogEncoderSwerve extends SwerveAbsoluteEncoder
 {
 
   /**
-   * The {@link AbsoluteEncoder} representing the duty cycle encoder attached to the SparkMax.
+   * The {@link SparkAnalogSensor} representing the duty cycle encoder attached to the SparkMax analog port.
    */
-  public  AbsoluteEncoder encoder;
+  public  SparkAnalogSensor encoder;
   /**
    * An {@link Alert} for if there is a failure configuring the encoder.
    */
-  private Alert           failureConfiguring;
+  private Alert             failureConfiguring;
   /**
-   * An {@link Alert} for if there is a failure configuring the encoder offset.
+   * An {@link Alert} for if the absolute encoder does not support integrated offsets.
    */
-  private Alert           offsetFailure;
+  private Alert             doesNotSupportIntegratedOffsets;
+
 
   /**
-   * Create the {@link SparkMaxEncoderSwerve} object as a duty cycle from the {@link CANSparkMax} motor.
+   * Create the {@link SparkMaxAnalogEncoderSwerve} object as a analog sensor from the {@link CANSparkMax} motor data
+   * port analog pin.
    *
-   * @param motor            Motor to create the encoder from.
-   * @param conversionFactor The conversion factor to set if the output is not from 0 to 360.
+   * @param motor Motor to create the encoder from.
    */
-  public SparkMaxEncoderSwerve(SwerveMotor motor, int conversionFactor)
+  public SparkMaxAnalogEncoderSwerve(SwerveMotor motor)
   {
     if (motor.getMotor() instanceof CANSparkMax)
     {
-      encoder = ((CANSparkMax) motor.getMotor()).getAbsoluteEncoder(Type.kDutyCycle);
-      configureSparkMax(() -> encoder.setVelocityConversionFactor(conversionFactor));
-      configureSparkMax(() -> encoder.setPositionConversionFactor(conversionFactor));
+      encoder = ((CANSparkMax) motor.getMotor()).getAnalog(Mode.kAbsolute);
     } else
     {
       throw new RuntimeException("Motor given to instantiate SparkMaxEncoder is not a CANSparkMax");
@@ -51,10 +47,11 @@ public class SparkMaxEncoderSwerve extends SwerveAbsoluteEncoder
         "Encoders",
         "Failure configuring SparkMax Analog Encoder",
         Alert.AlertType.WARNING_TRACE);
-    offsetFailure = new Alert(
+    doesNotSupportIntegratedOffsets = new Alert(
         "Encoders",
-        "Failure to set Absolute Encoder Offset",
+        "SparkMax Analog Sensors do not support integrated offsets",
         Alert.AlertType.WARNING_TRACE);
+
   }
 
   /**
@@ -126,7 +123,7 @@ public class SparkMaxEncoderSwerve extends SwerveAbsoluteEncoder
   }
 
   /**
-   * Sets the Absolute Encoder Offset inside of the SparkMax's Memory.
+   * Sets the Absolute Encoder offset at the Encoder Level.
    *
    * @param offset the offset the Absolute Encoder uses as the zero point.
    * @return if setting Absolute Encoder Offset was successful or not.
@@ -134,17 +131,7 @@ public class SparkMaxEncoderSwerve extends SwerveAbsoluteEncoder
   @Override
   public boolean setAbsoluteEncoderOffset(double offset)
   {
-    REVLibError error = null;
-    for (int i = 0; i < maximumRetries; i++)
-    {
-      error = encoder.setZeroOffset(offset);
-      if (error == REVLibError.kOk)
-      {
-        return true;
-      }
-    }
-    offsetFailure.setText("Failure to set Absolute Encoder Offset Error: " + error);
-    offsetFailure.set(true);
+    doesNotSupportIntegratedOffsets.set(true);
     return false;
   }
 

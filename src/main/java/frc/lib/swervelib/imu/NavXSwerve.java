@@ -1,13 +1,14 @@
 package frc.lib.swervelib.imu;
 
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Optional;
+import frc.lib.swervelib.telemetry.Alert;
 
 /**
  * Communicates with the NavX as the IMU.
@@ -22,7 +23,15 @@ public class NavXSwerve extends SwerveIMU
   /**
    * Offset for the NavX.
    */
-  private Rotation3d offset = new Rotation3d();
+  private Rotation3d offset      = new Rotation3d();
+  /**
+   * Inversion for the gyro
+   */
+  private boolean    invertedIMU = false;
+  /**
+   * An {@link Alert} for if there is an error instantiating the NavX.
+   */
+  private Alert      navXError;
 
   /**
    * Constructor for the NavX swerve.
@@ -30,6 +39,29 @@ public class NavXSwerve extends SwerveIMU
    * @param port Serial Port to connect to.
    */
   public NavXSwerve(SerialPort.Port port)
+  {
+    navXError = new Alert("IMU", "Error instantiating NavX.", Alert.AlertType.ERROR_TRACE);
+    try
+    {
+      /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
+      /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
+      /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
+      gyro = new AHRS(port);
+      factoryDefault();
+      SmartDashboard.putData(gyro);
+    } catch (RuntimeException ex)
+    {
+      navXError.setText("Error instantiating NavX: " + ex.getMessage());
+      navXError.set(true);
+    }
+  }
+
+  /**
+   * Constructor for the NavX swerve.
+   *
+   * @param port SPI Port to connect to.
+   */
+  public NavXSwerve(SPI.Port port)
   {
     try
     {
@@ -41,7 +73,30 @@ public class NavXSwerve extends SwerveIMU
       SmartDashboard.putData(gyro);
     } catch (RuntimeException ex)
     {
-      DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+      navXError.setText("Error instantiating NavX: " + ex.getMessage());
+      navXError.set(true);
+    }
+  }
+
+  /**
+   * Constructor for the NavX swerve.
+   *
+   * @param port I2C Port to connect to.
+   */
+  public NavXSwerve(I2C.Port port)
+  {
+    try
+    {
+      /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
+      /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
+      /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
+      gyro = new AHRS(port);
+      factoryDefault();
+      SmartDashboard.putData(gyro);
+    } catch (RuntimeException ex)
+    {
+      navXError.setText("Error instantiating NavX: " + ex.getMessage());
+      navXError.set(true);
     }
   }
 
@@ -52,10 +107,7 @@ public class NavXSwerve extends SwerveIMU
   public void factoryDefault()
   {
     // gyro.reset(); // Reported to be slow
-    offset = new Rotation3d(new Quaternion(gyro.getQuaternionW(),
-                                           gyro.getQuaternionX(),
-                                           gyro.getQuaternionY(),
-                                           gyro.getQuaternionZ()));
+    offset = gyro.getRotation3d();
   }
 
   /**
@@ -77,16 +129,24 @@ public class NavXSwerve extends SwerveIMU
   }
 
   /**
+   * Set the gyro to invert its default direction
+   *
+   * @param invertIMU invert gyro direction
+   */
+  public void setInverted(boolean invertIMU)
+  {
+    invertedIMU = invertIMU;
+  }
+
+  /**
    * Fetch the {@link Rotation3d} from the IMU without any zeroing. Robot relative.
    *
    * @return {@link Rotation3d} from the IMU.
    */
+  @Override
   public Rotation3d getRawRotation3d()
   {
-    return new Rotation3d(new Quaternion(gyro.getQuaternionW(),
-                                         gyro.getQuaternionX(),
-                                         gyro.getQuaternionY(),
-                                         gyro.getQuaternionZ()));
+    return invertedIMU ? gyro.getRotation3d().unaryMinus() : gyro.getRotation3d();
   }
 
   /**
@@ -97,7 +157,7 @@ public class NavXSwerve extends SwerveIMU
   @Override
   public Rotation3d getRotation3d()
   {
-    return getRawRotation3d().minus(offset);
+    return gyro.getRotation3d().minus(offset);
   }
 
   /**
@@ -115,12 +175,6 @@ public class NavXSwerve extends SwerveIMU
             gyro.getWorldLinearAccelY(),
             gyro.getWorldLinearAccelZ())
             .times(9.81));
-  }
-
-  @Override
-  public Optional<Rotation3d> getAngularVel()
-  {
-    return Optional.empty();
   }
 
   /**

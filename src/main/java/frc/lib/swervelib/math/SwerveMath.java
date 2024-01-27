@@ -1,19 +1,18 @@
 package frc.lib.swervelib.math;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import java.util.List;
 import frc.lib.swervelib.SwerveController;
 import frc.lib.swervelib.SwerveModule;
 import frc.lib.swervelib.parser.SwerveDriveConfiguration;
 import frc.lib.swervelib.parser.SwerveModuleConfiguration;
-import frc.lib.swervelib.telemetry.SwerveDriveTelemetry;
-import frc.lib.swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 /**
  * Mathematical functions which pertain to swerve drive.
@@ -22,8 +21,8 @@ public class SwerveMath
 {
 
   /**
-   * Calculate the meters per rotation for the integrated encoder. Calculation: 4in diameter wheels * pi [circumfrence]
-   * / gear ratio.
+   * Calculate the meters per rotation for the integrated encoder. Calculation: (PI * WHEEL DIAMETER IN METERS) / (GEAR
+   * RATIO * ENCODER RESOLUTION)
    *
    * @param wheelDiameter    Wheel diameter in meters.
    * @param driveGearRatio   The gear ratio of the drive motor.
@@ -34,6 +33,20 @@ public class SwerveMath
       double wheelDiameter, double driveGearRatio, double pulsePerRotation)
   {
     return (Math.PI * wheelDiameter) / (driveGearRatio * pulsePerRotation);
+  }
+
+  /**
+   * Calculate the meters per rotation for the integrated encoder. Calculation: (PI * WHEEL DIAMETER IN METERS) / (GEAR
+   * RATIO)
+   *
+   * @param wheelDiameter  Wheel diameter in meters.
+   * @param driveGearRatio The gear ratio of the drive motor.
+   * @return Meters per rotation for the drive motor.
+   */
+  public static double calculateMetersPerRotation(
+      double wheelDiameter, double driveGearRatio)
+  {
+    return calculateMetersPerRotation(wheelDiameter, driveGearRatio, 1);
   }
 
   /**
@@ -65,6 +78,27 @@ public class SwerveMath
   }
 
   /**
+   * Create the drive feedforward for swerve modules.
+   *
+   * @param optimalVoltage                 Optimal voltage to calculate kV (voltage/max Velocity)
+   * @param maxSpeed                       Maximum velocity in meters per second to use for the feed forward, should be
+   *                                       as close to physical max as possible.
+   * @param wheelGripCoefficientOfFriction Wheel grip coefficient of friction for kA (voltage/(cof*9.81))
+   * @return Drive feedforward for drive motor on a swerve module.
+   */
+  public static SimpleMotorFeedforward createDriveFeedforward(double optimalVoltage, double maxSpeed,
+                                                              double wheelGripCoefficientOfFriction)
+  {
+    double kv = optimalVoltage / maxSpeed;
+    /// ^ Volt-seconds per meter (max voltage divided by max speed)
+    double ka =
+        optimalVoltage
+        / calculateMaxAcceleration(wheelGripCoefficientOfFriction);
+    /// ^ Volt-seconds^2 per meter (max voltage divided by max accel)
+    return new SimpleMotorFeedforward(0, kv, ka);
+  }
+
+  /**
    * Calculate the degrees per steering rotation for the integrated encoder. Encoder conversion values. Drive converts
    * motor rotations to linear wheel distance and steering converts motor rotations to module azimuth.
    *
@@ -79,6 +113,19 @@ public class SwerveMath
   }
 
   /**
+   * Calculate the degrees per steering rotation for the integrated encoder. Encoder conversion values. Drive converts
+   * motor rotations to linear wheel distance and steering converts motor rotations to module azimuth.
+   *
+   * @param angleGearRatio The gear ratio of the steering motor.
+   * @return Degrees per steering rotation for the angle motor.
+   */
+  public static double calculateDegreesPerSteeringRotation(
+      double angleGearRatio)
+  {
+    return calculateDegreesPerSteeringRotation(angleGearRatio, 1);
+  }
+
+  /**
    * Calculate the maximum angular velocity.
    *
    * @param maxSpeed        Max speed of the robot in meters per second.
@@ -89,7 +136,7 @@ public class SwerveMath
   public static double calculateMaxAngularVelocity(
       double maxSpeed, double furthestModuleX, double furthestModuleY)
   {
-    return maxSpeed / Math.hypot(furthestModuleX, furthestModuleY);
+    return maxSpeed / new Rotation2d(furthestModuleX, furthestModuleY).getRadians();
   }
 
   /**
@@ -191,12 +238,7 @@ public class SwerveMath
     }
 
     double horizontalDistance = projectedHorizontalCg.plus(projectedWheelbaseEdge).getNorm();
-    double maxAccel           = 9.81 * horizontalDistance / robotCG.getZ();
-    if (SwerveDriveTelemetry.verbosity == TelemetryVerbosity.HIGH)
-    {
-      SmartDashboard.putNumber("calcMaxAccel", maxAccel);
-    }
-    return maxAccel;
+    return 9.81 * horizontalDistance / robotCG.getZ();
   }
 
   /**
@@ -252,18 +294,10 @@ public class SwerveMath
   {
     // Get the robot's current field-relative velocity
     Translation2d currentVelocity = SwerveController.getTranslation2d(fieldVelocity);
-    if (SwerveDriveTelemetry.verbosity == TelemetryVerbosity.HIGH)
-    {
-      SmartDashboard.putNumber("currentVelocity", currentVelocity.getX());
-    }
 
     // Calculate the commanded change in velocity by subtracting current velocity
     // from commanded velocity
     Translation2d deltaV = commandedVelocity.minus(currentVelocity);
-    if (SwerveDriveTelemetry.verbosity == TelemetryVerbosity.HIGH)
-    {
-      SmartDashboard.putNumber("deltaV", deltaV.getX());
-    }
 
     // Creates an acceleration vector with the direction of delta V and a magnitude
     // of the maximum allowed acceleration in that direction
@@ -365,16 +399,15 @@ public class SwerveMath
   /**
    * Perform anti-jitter within modules if the speed requested is too low.
    *
-   * @param moduleState     Current {@link SwerveModuleState2} requested.
-   * @param lastModuleState Previous {@link SwerveModuleState2} used.
-   * @param maxSpeed        Maximum speed of the modules, should be in {@link SwerveDriveConfiguration#maxSpeed}.
+   * @param moduleState     Current {@link SwerveModuleState} requested.
+   * @param lastModuleState Previous {@link SwerveModuleState} used.
+   * @param maxSpeed        Maximum speed of the modules.
    */
-  public static void antiJitter(SwerveModuleState2 moduleState, SwerveModuleState2 lastModuleState, double maxSpeed)
+  public static void antiJitter(SwerveModuleState moduleState, SwerveModuleState lastModuleState, double maxSpeed)
   {
     if (Math.abs(moduleState.speedMetersPerSecond) <= (maxSpeed * 0.01))
     {
       moduleState.angle = lastModuleState.angle;
-      moduleState.omegaRadPerSecond = lastModuleState.omegaRadPerSecond;
     }
   }
 }

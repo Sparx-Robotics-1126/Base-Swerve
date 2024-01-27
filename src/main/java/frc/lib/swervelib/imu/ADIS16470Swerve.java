@@ -3,6 +3,7 @@ package frc.lib.swervelib.imu;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Optional;
 
@@ -19,7 +20,11 @@ public class ADIS16470Swerve extends SwerveIMU
   /**
    * Offset for the ADIS16470.
    */
-  private       Rotation3d    offset = new Rotation3d();
+  private       Rotation3d    offset      = new Rotation3d();
+  /**
+   * Inversion for the gyro
+   */
+  private       boolean       invertedIMU = false;
 
   /**
    * Construct the ADIS16470 imu and reset default configurations. Publish the gyro to the SmartDashboard.
@@ -38,9 +43,8 @@ public class ADIS16470Swerve extends SwerveIMU
   @Override
   public void factoryDefault()
   {
-    offset = new Rotation3d(
-        Math.toRadians(imu.getYComplementaryAngle()), Math.toRadians(imu.getXComplementaryAngle()),
-        Math.toRadians(imu.getAngle()));
+    offset = new Rotation3d(0, 0, 0);
+    imu.calibrate();
   }
 
   /**
@@ -63,15 +67,24 @@ public class ADIS16470Swerve extends SwerveIMU
   }
 
   /**
+   * Set the gyro to invert its default direction
+   *
+   * @param invertIMU invert gyro direction
+   */
+  public void setInverted(boolean invertIMU)
+  {
+    invertedIMU = invertIMU;
+  }
+
+  /**
    * Fetch the {@link Rotation3d} from the IMU without any zeroing. Robot relative.
    *
    * @return {@link Rotation3d} from the IMU.
    */
   public Rotation3d getRawRotation3d()
   {
-    return new Rotation3d(
-        Math.toRadians(imu.getYComplementaryAngle()), Math.toRadians(imu.getXComplementaryAngle()),
-        Math.toRadians(imu.getAngle()));
+    Rotation3d reading = new Rotation3d(0, 0, Math.toRadians(-imu.getAngle(IMUAxis.kYaw)));
+    return invertedIMU ? reading.unaryMinus() : reading;
   }
 
   /**
@@ -96,13 +109,6 @@ public class ADIS16470Swerve extends SwerveIMU
   {
     return Optional.of(new Translation3d(imu.getAccelX(), imu.getAccelY(), imu.getAccelZ()));
   }
-
-  @Override
-  public Optional<Rotation3d> getAngularVel()
-  {
-    return Optional.empty();
-  }
-
 
   /**
    * Get the instantiated IMU object.

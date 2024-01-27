@@ -1,10 +1,10 @@
-package frc.lib.swervelib.telemetry;
+package swervelib.telemetry;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Telemetry to describe the {@link SecondOrderSwerveDrive.SwerveDrive} following frc-web-components. (Which follows AdvantageKit)
+ * Telemetry to describe the {@link swervelib.SwerveDrive} following frc-web-components. (Which follows AdvantageKit)
  */
 public class SwerveDriveTelemetry
 {

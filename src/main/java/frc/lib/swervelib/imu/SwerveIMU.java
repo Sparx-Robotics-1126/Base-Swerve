@@ -28,6 +28,13 @@ public abstract class SwerveIMU
   public abstract void setOffset(Rotation3d offset);
 
   /**
+   * Set the gyro to invert its default direction.
+   *
+   * @param invertIMU gyro direction
+   */
+  public abstract void setInverted(boolean invertIMU);
+
+  /**
    * Fetch the {@link Rotation3d} from the IMU without any zeroing. Robot relative.
    *
    * @return {@link Rotation3d} from the IMU.
@@ -48,14 +55,6 @@ public abstract class SwerveIMU
    * @return {@link Translation3d} of the acceleration as an {@link Optional}.
    */
   public abstract Optional<Translation3d> getAccel();
-
-  /**
-   * Fetch the angular velocity [roll, pitch, yaw] from the IMU in radians per second. If angular velocity isn't supported returns
-   * empty.
-   *
-   * @return {@link Rotation3d} of the angular velocity as an {@link Optional}.
-   */
-  public abstract Optional<Rotation3d> getAngularVel();
 
   /**
    * Get the instantiated IMU object.

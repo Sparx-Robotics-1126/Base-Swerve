@@ -12,47 +12,38 @@ public class SwerveControllerConfiguration
    * PIDF for the heading of the robot.
    */
   public final PIDFConfig headingPIDF;
-
-  /**
-   * PIDF for the snap heading of the robot.
-   */
-  public final PIDFConfig snapPIDF;
-
   /**
    * hypotenuse deadband for the robot angle control joystick.
    */
   public final double
                           angleJoyStickRadiusDeadband; // Deadband for the minimum hypot for the heading joystick.
   /**
-   * Maximum robot speed in meters per second.
-   */
-  public       double     maxSpeed;
-  /**
    * Maximum angular velocity in rad/s
    */
   public       double     maxAngularVelocity;
 
   /**
-   * Construct the swerve controller configuration.
+   * Construct the swerve controller configuration. Assumes robot is square to fetch maximum angular velocity.
    *
-   * @param driveCfg                    Drive configuration.
+   * @param driveCfg                    {@link SwerveDriveConfiguration} to fetch the first module X and Y used to
+   *                                    calculate the maximum angular velocity.
    * @param headingPIDF                 Heading PIDF configuration.
    * @param angleJoyStickRadiusDeadband Deadband on radius of angle joystick.
+   * @param maxSpeedMPS                 Maximum speed in meters per second for angular velocity, remember if you have
+   *                                    feet per second use {@link edu.wpi.first.math.util.Units#feetToMeters(double)}.
    */
   public SwerveControllerConfiguration(
       SwerveDriveConfiguration driveCfg,
       PIDFConfig headingPIDF,
-      PIDFConfig snapPIDF,
-      double angleJoyStickRadiusDeadband)
+      double angleJoyStickRadiusDeadband,
+      double maxSpeedMPS)
   {
-    this.maxSpeed = driveCfg.maxSpeed;
     this.maxAngularVelocity =
         calculateMaxAngularVelocity(
-            driveCfg.maxSpeed,
+            maxSpeedMPS,
             Math.abs(driveCfg.moduleLocationsMeters[0].getX()),
             Math.abs(driveCfg.moduleLocationsMeters[0].getY()));
     this.headingPIDF = headingPIDF;
-    this.snapPIDF = snapPIDF;
     this.angleJoyStickRadiusDeadband = angleJoyStickRadiusDeadband;
   }
 
@@ -62,9 +53,11 @@ public class SwerveControllerConfiguration
    *
    * @param driveCfg    Drive configuration.
    * @param headingPIDF Heading PIDF configuration.
+   * @param maxSpeedMPS Maximum speed in meters per second for angular velocity, remember if you have feet per second
+   *                    use {@link edu.wpi.first.math.util.Units#feetToMeters(double)}.
    */
-  public SwerveControllerConfiguration(SwerveDriveConfiguration driveCfg, PIDFConfig headingPIDF, PIDFConfig snapPIDF)
+  public SwerveControllerConfiguration(SwerveDriveConfiguration driveCfg, PIDFConfig headingPIDF, double maxSpeedMPS)
   {
-    this(driveCfg, headingPIDF, snapPIDF, 0.5);
+    this(driveCfg, headingPIDF, 0.5, maxSpeedMPS);
   }
 }

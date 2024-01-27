@@ -18,21 +18,18 @@ public class ControllerPropertiesJson
    * The PID used to control the robot heading.
    */
   public PIDFConfig heading;
-    /**
-   * The PID used to control the robot snap heading.
-   */
-  public PIDFConfig snap;
 
   /**
    * Create the {@link SwerveControllerConfiguration} based on parsed and given data.
    *
    * @param driveConfiguration {@link SwerveDriveConfiguration} parsed configuration.
+   * @param maxSpeedMPS        Maximum speed in meters per second for the angular acceleration of the robot.
    * @return {@link SwerveControllerConfiguration} object based on parsed data.
    */
   public SwerveControllerConfiguration createControllerConfiguration(
-      SwerveDriveConfiguration driveConfiguration)
+      SwerveDriveConfiguration driveConfiguration, double maxSpeedMPS)
   {
     return new SwerveControllerConfiguration(
-        driveConfiguration, heading, snap, angleJoystickRadiusDeadband);
+        driveConfiguration, heading, angleJoystickRadiusDeadband, maxSpeedMPS);
   }
 }

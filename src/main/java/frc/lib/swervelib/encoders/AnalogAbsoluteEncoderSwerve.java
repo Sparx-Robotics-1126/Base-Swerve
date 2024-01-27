@@ -2,6 +2,7 @@ package frc.lib.swervelib.encoders;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
+import frc.lib.swervelib.telemetry.Alert;
 
 /**
  * Swerve Absolute Encoder for Thrifty Encoders and other analog encoders.
@@ -18,6 +19,14 @@ public class AnalogAbsoluteEncoderSwerve extends SwerveAbsoluteEncoder
    * Inversion state of the encoder.
    */
   private boolean     inverted = false;
+  /**
+   * An {@link Alert} for if the absolute encoder offset cannot be set.
+   */
+  private Alert       cannotSetOffset;
+  /**
+   * An {@link Alert} detailing how the analog absolute encoder may not report accurate velocities.
+   */
+  private Alert       inaccurateVelocities;
 
   /**
    * Construct the Thrifty Encoder as a Swerve Absolute Encoder.
@@ -27,6 +36,14 @@ public class AnalogAbsoluteEncoderSwerve extends SwerveAbsoluteEncoder
   public AnalogAbsoluteEncoderSwerve(AnalogInput encoder)
   {
     this.encoder = encoder;
+    cannotSetOffset = new Alert(
+        "Encoders",
+        "Cannot Set Absolute Encoder Offset of Analog Encoders Channel #" + encoder.getChannel(),
+        Alert.AlertType.WARNING);
+    inaccurateVelocities = new Alert(
+        "Encoders",
+        "The Analog Absolute encoder may not report accurate velocities!",
+        Alert.AlertType.WARNING_TRACE);
   }
 
   /**
@@ -88,5 +105,31 @@ public class AnalogAbsoluteEncoderSwerve extends SwerveAbsoluteEncoder
   public Object getAbsoluteEncoder()
   {
     return encoder;
+  }
+
+  /**
+   * Cannot Set the offset of an Analog Absolute Encoder.
+   *
+   * @param offset the offset the Absolute Encoder uses as the zero point.
+   * @return Will always be false as setting the offset is unsupported of an Analog absolute encoder.
+   */
+  @Override
+  public boolean setAbsoluteEncoderOffset(double offset)
+  {
+    //Do Nothing
+    cannotSetOffset.set(true);
+    return false;
+  }
+
+  /**
+   * Get the velocity in degrees/sec.
+   *
+   * @return velocity in degrees/sec.
+   */
+  @Override
+  public double getVelocity()
+  {
+    inaccurateVelocities.set(true);
+    return encoder.getValue();
   }
 }
