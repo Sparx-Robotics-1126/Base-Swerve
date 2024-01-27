@@ -6,11 +6,6 @@ import frc.lib.swervelib.encoders.AnalogAbsoluteEncoderSwerve;
 import frc.lib.swervelib.encoders.CANCoderSwerve;
 import frc.lib.swervelib.encoders.SparkMaxEncoderSwerve;
 import frc.lib.swervelib.encoders.SwerveAbsoluteEncoder;
-import frc.lib.swervelib.imu.ADIS16448Swerve;
-import frc.lib.swervelib.imu.ADIS16470Swerve;
-import frc.lib.swervelib.imu.ADXRS450Swerve;
-import frc.lib.swervelib.imu.AnalogGyroSwerve;
-import frc.lib.swervelib.imu.NavXSwerve;
 import frc.lib.swervelib.imu.Pigeon2Swerve;
 import frc.lib.swervelib.imu.SwerveIMU;
 import frc.lib.swervelib.motors.SparkMaxBrushedMotorSwerve;
@@ -72,21 +67,7 @@ public class DeviceJson
   {
     switch (type)
     {
-      case "adis16448":
-        return new ADIS16448Swerve();
-      case "adis16470":
-        return new ADIS16470Swerve();
-      case "adxrs450":
-        return new ADXRS450Swerve();
-      case "analog":
-        return new AnalogGyroSwerve(id);
-      case "navx_onborard":
-        return new NavXSwerve(Port.kOnboard);
-      case "navx_usb":
-        return new NavXSwerve(Port.kUSB);
-      case "navx_mxp":
-      case "navx":
-        return new NavXSwerve(Port.kMXP);
+    
       case "pigeon":{
         return new Pigeon2Swerve(id);
        // return new PigeonSwerve(id);
