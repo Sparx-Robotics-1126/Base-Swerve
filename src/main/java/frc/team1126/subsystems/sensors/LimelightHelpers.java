@@ -641,7 +641,7 @@ public class LimelightHelpers {
     /////
     /////
 
-    public static void setPipelineIndex(String limelightName, int pipelineIndex) {
+    public static void setPipelineIndex(String limelightName, double pipelineIndex) {
         setLimelightNTDouble(limelightName, "pipeline", pipelineIndex);
     }
 

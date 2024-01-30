@@ -64,8 +64,11 @@ public class Limelight extends SubsystemBase {
 		setForTargeting(USE_FOR_TARGETING);
 		setLED(LED_ON_DEFAULT);
 	}
+	public double getAngle(){
+		return  table.getEntry(HORIZONTAL_OFFSET).getDouble(0.0);
+	}
 
-	public void setLimelightPipelineIndex(int idx) {
+	public void setLimelightPipelineIndex(double idx) {
 		LimelightHelpers.setPipelineIndex(LimelightConstants.LIMELIGHT_NAME, idx);
 	  }
 	

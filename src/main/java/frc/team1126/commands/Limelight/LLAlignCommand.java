@@ -88,7 +88,7 @@ public class LLAlignCommand extends Command {
 			//double driveOutput = driveOutputSmoother.smoothInput(drivePIDOutput);
 
 			//in last year's code, we had the x and y values as seperate parameters, replaced by translation2D parameter
-			driveSubsystem.drive(new Translation2d(0, strafeOutput), 0,true, true);
+			driveSubsystem.drive(new Translation2d(strafeOutput*-1, 0), 0,true, true);
 
 		} else {
 			driveSubsystem.drive(new Translation2d(0, 0), 0.0, true, true);
@@ -99,6 +99,7 @@ public class LLAlignCommand extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		// LimelightHelpers.setLEDMode_PipelineControl("");
+		System.out.println("ended");
 	}
 
 	// Returns true when the command should end.

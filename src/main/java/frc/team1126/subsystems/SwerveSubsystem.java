@@ -232,7 +232,17 @@ public class SwerveSubsystem extends SubsystemBase
   public Rotation2d getRollVel() {
     return swerveDrive.getRollVel();
   }
+  public double getMaxAcceleration() {
+    return 1.0;
+}
 
+public double getMaxAngularSpeed() {
+    return Math.PI*2;
+}
+
+public double getMaxAngularAcceleration() {
+    return Math.PI;
+} 
   /**
    * Set the translational scalar for the swerve translational velocity
    * 

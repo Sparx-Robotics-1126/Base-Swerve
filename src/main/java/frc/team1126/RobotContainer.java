@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team1126.Constants.SwerveConstants;
 import frc.team1126.commands.Limelight.LLAlignCommand;
+import frc.team1126.commands.Limelight.VisionAlignment;
 import frc.team1126.commands.drive.DriveFieldRelative;
 import frc.team1126.subsystems.CANdleSubsystem;
 import frc.team1126.subsystems.SwerveSubsystem;
@@ -68,7 +69,8 @@ public class RobotContainer
   private void configureBindings() 
   {
     driver.leftTrigger().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
-    driver.x().onTrue(new LLAlignCommand(true));
+    driver.a().whileTrue(new VisionAlignment(this::getXSpeed, 0, swerve));
+    driver.x().whileTrue(new LLAlignCommand(true));
     driver.povUp().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2)));
     driver.povDown().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI)));
     driver.povLeft().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI/2)));
@@ -79,4 +81,38 @@ public class RobotContainer
 		operator.back().onTrue(new InstantCommand(() -> m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CUBE)));
     operator.x().onTrue(new InstantCommand(() ->  operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0)));
   }
+
+  double getXSpeed(){ 
+    int pov = driver.getHID().getPOV();
+    double finalX;
+
+    if ( pov == 0 )
+      finalX = -0.05;
+    else if(pov == 180)
+      finalX = 0.05;
+    else if (Math.abs(driver.getLeftY()) <= 0.1)
+      finalX = 0.0;
+    else
+      finalX = driver.getLeftY() * 0.75 * (1.0 + driver.getLeftTriggerAxis());
+    
+    return finalX;
+  }
+
+  public double getYSpeed(){ 
+    int pov = driver.getHID().getPOV();
+
+    double finalY;
+    if ( pov == 270 || pov == 315 || pov == 225)
+      finalY = -0.05;
+    else if(pov == 90 || pov == 45 || pov == 135)
+      finalY = 0.05;
+    else if (Math.abs(driver.getLeftX()) <= 0.1)
+      finalY = 0.0;
+    else
+      finalY = driver.getLeftX() * 0.75 * (1.0 + driver.getLeftTriggerAxis());
+    
+    // if (SwerveType.isStandard())
+    //   finalY = -finalY;
+    return finalY;
+  } 
 }
