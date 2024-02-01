@@ -56,7 +56,7 @@ public abstract class SwerveIMU
    * @return {@link Rotation3d} of the angular velocity as an {@link Optional}.
    */
   public abstract Optional<Rotation3d> getAngularVel();
-
+public abstract double getRoll();
   /**
    * Get the instantiated IMU object.
    *

@@ -475,6 +475,10 @@ public class SecondOrderSwerveDrive extends SwerveDrive
     return positions;
   }
 
+public SwerveIMU getSwerveIMU(){
+  return imu;
+}
+
   /**
    * Resets the gyro angle to zero and resets odometry to the same position, but facing toward 0.
    */

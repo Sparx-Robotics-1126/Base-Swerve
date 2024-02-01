@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -15,6 +17,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.Timer;
+import frc.lib.swervelib.imu.SwerveIMU;
+import frc.lib.swervelib.math.SwerveModuleState2;
+import frc.lib.swervelib.parser.SwerveControllerConfiguration;
+import frc.lib.swervelib.parser.SwerveDriveConfiguration;
 
 /**
  * Swerve Drive class representing and controlling the swerve drive.
@@ -128,6 +135,8 @@ public abstract class SwerveDrive
    * @return A list of SwerveModulePositions containg the current module positions
    */
   public abstract SwerveModulePosition[] getModulePositions();
+
+public abstract SwerveIMU getSwerveIMU();
 
   /**
    * Resets the gyro angle to zero and resets odometry to the same position, but facing toward 0.

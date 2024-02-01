@@ -16,6 +16,9 @@ import java.util.List;
 
 import com.pathplanner.lib.path.PathConstraints;
 public final class Constants {
+    public static final double NOMINAL_VOLTAGE = 12;
+    public static final int MAX_CURRENT = 80;
+    public static final double DEAD_BAND = .5;
 
     public static class AprilTags {
         public static final int SOURCE_RIGHT_BLUE_ID = 1;
@@ -304,6 +307,35 @@ public final class Constants {
         //for endgame rumble feature
         public static final int EndGameSeconds = 30;
         public static final int StopRumbleSeconds = 28;
+      
+
+    }
+
+    public static class ClimberConstants {
+        
+        public static final double kGearRatio = 10.71;// 10.75; // 8.45;// 10.71;
+        public static final double kWheelDiameterInches = 6;
+        public static final double kWheelDiameterMeters = Units.inchesToMeters(kWheelDiameterInches);
+        public static final double kEncoderDistanceConversionFactor = ((Math.PI * kWheelDiameterMeters) / (kGearRatio));
+
+        public static final int MOTOR_LEFT_ID = 1;
+        public static final int MOTOR_RIGHT_ID = 2;
+    }
+
+    public static class StorageConstants {
+        
+        public static final int ACQ_WHEELS_ID = 6;
+        public static final int LIGHT_SENSOR = 5; // what the light sensor id was for 2023 extension, probably DIO 
+    }
+
+    public static class ShooterConstants {
+        public static final int SHOOTER_ID = 7;
+    }
+
+    public static class RotationConstants {
+        public static final int MASTER_ID = 8;
+        public static final int SLAVE_ID = 9;
+        public static final int ROTATION_PIGEON_ID = 5;
     }
 
     /**

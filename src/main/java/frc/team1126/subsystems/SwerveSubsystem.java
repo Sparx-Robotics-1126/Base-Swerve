@@ -17,6 +17,7 @@ import frc.lib.swervelib.FirstOrderSwerveDrive;
 import frc.lib.swervelib.SecondOrderSwerveDrive;
 import frc.lib.swervelib.SwerveController;
 import frc.lib.swervelib.SwerveDrive;
+import frc.lib.swervelib.imu.SwerveIMU;
 import frc.lib.swervelib.parser.SwerveControllerConfiguration;
 import frc.lib.swervelib.parser.SwerveDriveConfiguration;
 import frc.lib.swervelib.parser.SwerveParser;
@@ -106,6 +107,10 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive.resetOdometry(initialHolonomicPose);
   }
 
+
+  public SwerveIMU getSwerveIMU(){
+    return swerveDrive.getSwerveIMU();
+  }
   /**
    * Gets the current pose (position and rotation) of the robot, as reported by odometry.
    *

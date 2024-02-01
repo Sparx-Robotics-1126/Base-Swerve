@@ -1,11 +1,11 @@
 package frc.team1126.subsystems;
 
-import com.ctre.phoenix.sensors.Pigeon2;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.swervelib.imu.Pigeon2Swerve;
+import frc.lib.swervelib.imu.SwerveIMU;
 import frc.team1126.Constants.ClimberConstants;
 
 
@@ -17,10 +17,12 @@ public class Climber extends SubsystemBase {
     private RelativeEncoder m_leftEncoder;
     private RelativeEncoder m_rightEncoder;
 
-public Climber() {
-    
-    motorLeft = new CANSparkMax(ClimberConstants.MOTOR_LEFT_ID, CANSparkLowLevel.MotorType.kBrushless);
+    private SwerveIMU imu;
 
+public Climber(SwerveSubsystem swerveSubsystem) {
+    
+    imu= swerveSubsystem.getSwerveIMU();
+    motorLeft = new CANSparkMax(ClimberConstants.MOTOR_LEFT_ID, CANSparkLowLevel.MotorType.kBrushless);
     motorRight = new CANSparkMax(ClimberConstants.MOTOR_RIGHT_ID, CANSparkLowLevel.MotorType.kBrushless);
 
     motorLeft.setInverted(true);
@@ -35,9 +37,17 @@ public Climber() {
         .setVelocityConversionFactor(Math.PI * ClimberConstants.kWheelDiameterMeters / ClimberConstants.kGearRatio / 60.0);
 
     m_leftEncoder.setPosition(0);
-
    //Pigeon2Swerve.getInstance(); NEED TO BE PIGEON AWARE AT SOME POINT!
 
 }
-    
+
+    @Override
+    public void periodic() {
+        double leftHeight = m_leftEncoder.getPosition();
+        double rightHeight = m_rightEncoder.getPosition();
+        double averageHeight = (leftHeight + rightHeight) / 2.0;
+
+        SmartDashboard.putNumber("Climber Height", averageHeight);
+        SmartDashboard.putNumber("Roll", imu.getRoll());
+    }
 }

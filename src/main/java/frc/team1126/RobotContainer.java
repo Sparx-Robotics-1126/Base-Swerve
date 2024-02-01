@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team1126.Constants.SwerveConstants;
+import frc.team1126.commands.Limelight.DriveToDistance;
 import frc.team1126.commands.Limelight.LLAlignCommand;
 import frc.team1126.commands.Limelight.VisionAlignment;
 import frc.team1126.commands.drive.DriveFieldRelative;
@@ -71,6 +72,7 @@ public class RobotContainer
     driver.leftTrigger().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
     driver.a().whileTrue(new VisionAlignment(this::getXSpeed, 0, swerve));
     driver.x().whileTrue(new LLAlignCommand(true));
+    driver.b().whileTrue(new DriveToDistance(swerve,40));
     driver.povUp().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2)));
     driver.povDown().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI)));
     driver.povLeft().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI/2)));

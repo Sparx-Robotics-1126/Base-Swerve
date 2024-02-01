@@ -162,6 +162,11 @@ public class Pigeon2Swerve extends SwerveIMU
     return Optional.of(new Rotation3d(Math.toRadians(initial[0]), Math.toRadians(initial[1]), Math.toRadians(initial[2])));
   }
 
+  @Override
+  public double getRoll() {
+  return imu.getRoll().getValue();
+  }
+
   /**
    * Get the instantiated IMU object.
    *
