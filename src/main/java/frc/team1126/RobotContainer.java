@@ -23,6 +23,7 @@ import frc.team1126.commands.Limelight.LLAlignCommand;
 import frc.team1126.commands.Limelight.VisionAlignment;
 import frc.team1126.commands.drive.DriveFieldRelative;
 import frc.team1126.subsystems.CANdleSubsystem;
+import frc.team1126.subsystems.Climber;
 import frc.team1126.subsystems.SwerveSubsystem;
 import frc.team1126.subsystems.sensors.Limelight;
 public class RobotContainer 
@@ -41,19 +42,7 @@ private static HashMap<String, Command> pathMap = new HashMap<>();
   CommandXboxController driver = new CommandXboxController(Constants.GeneralConstants.DRIVER_CONTROLLER_ID);
   CommandXboxController operator = new CommandXboxController(Constants.GeneralConstants.OPERATOR_CONTROLLER_ID);
 
-  public void EndGameRumble() {
-
-    if(DriverStation.getMatchTime() < SwerveConstants.EndGameSeconds && DriverStation.getMatchTime() > SwerveConstants.StopRumbleSeconds) {
-       
-      driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
-      operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.5);  
-    
-    } else {
-      driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-      operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-      
-    }
-  } 
+ 
 
   /* Operator Buttons */
   // private final JoystickButton cubeMode = new JoystickButton(operator.getHID(), XboxController.Button.kStart.value);
@@ -63,23 +52,26 @@ private static HashMap<String, Command> pathMap = new HashMap<>();
   	// public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
     public final Limelight m_limeLight = new Limelight();
 
+    public final  Climber climber;
 
 
   public RobotContainer() 
   {
-   
-    
-    configureBindings();
+
+    configureDriverBindings();
     swerve.setDefaultCommand(new DriveFieldRelative(swerve, 
                                                     () -> driver.getRawAxis(translationAxis)*-1,
                                                     () -> driver.getRawAxis(strafeAxis) *-1,
                                                     () -> driver.getRawAxis(rotationAxis)*-1)); 
     
-           configureChooser();                                         
-                  
+           configureChooser();   
+           
+//          climber = new Climber(swerve);
+//
+//          climber.setDefaultCommand(climber.moveClimber(operator.getLeftY(), operator.getRightY()));
   }
 
-  private void configureBindings() 
+  private void configureDriverBindings()
   {
     driver.leftTrigger().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
     driver.a().whileTrue(new VisionAlignment(this::getXSpeed, 0, swerve));
@@ -91,9 +83,15 @@ private static HashMap<String, Command> pathMap = new HashMap<>();
     driver.povRight().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 + Math.PI/2)));
     driver.leftBumper().onTrue(new InstantCommand(() -> swerve.setTranslationalScalar(Constants.SwerveConstants.SWERVE_SLOW_TRANSLATION)));
     driver.leftBumper().onFalse(new InstantCommand(() -> swerve.setTranslationalScalar(Constants.SwerveConstants.SWERVE_NORMAL_TRANSLATION)));
+  }
+
+  private void configureOperatoreBindings()
+  {
     operator.start().onTrue(new InstantCommand(() ->m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CONE)));
-		operator.back().onTrue(new InstantCommand(() -> m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CUBE)));
+    operator.back().onTrue(new InstantCommand(() -> m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CUBE)));
     operator.x().onTrue(new InstantCommand(() ->  operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0)));
+//    operator.leftBumper().whileTrue(new InstantCommand(() -> climber.moveToMax(5)));
+//    operator.rightBumper().whileTrue(new InstantCommand(() -> climber.moveToHome(5)));
   }
 
   double getXSpeed(){ 
@@ -160,4 +158,19 @@ private static HashMap<String, Command> pathMap = new HashMap<>();
 
 	}
 	
+ public void EndGameRumble() {
+
+    if(DriverStation.getMatchTime() < SwerveConstants.EndGameSeconds && DriverStation.getMatchTime() > SwerveConstants.StopRumbleSeconds) {
+       
+      driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
+      operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.5);  
+    
+    } else {
+      driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+      operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
+      
+    }
+  } 
+
+
 }
