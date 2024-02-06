@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team1126.Constants;
 import frc.team1126.Constants.RotationConstants;
 
-public class Rotation  extends SubsystemBase {
+public class Rotation extends SubsystemBase {
 
     private CANSparkMax rotationMotor;
     private CANSparkMax rotationMotorSlave;

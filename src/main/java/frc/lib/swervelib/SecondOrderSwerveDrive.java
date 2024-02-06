@@ -927,6 +927,10 @@ public SwerveIMU getSwerveIMU(){
   {
     return swerveController;
   }
+  public SwerveDriveConfiguration getSwerveDriveConfiguration()
+  {
+    return swerveDriveConfiguration;
+  }
 
   /**
    * Get the {@link SwerveModule}s associated with the {@link SecondOrderSwerveDrive}.

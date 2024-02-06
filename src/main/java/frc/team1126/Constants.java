@@ -15,10 +15,23 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.pathplanner.lib.path.PathConstraints;
+import frc.lib.swervelib.parser.PIDFConfig;
+
 public final class Constants {
     public static final double NOMINAL_VOLTAGE = 12;
     public static final int MAX_CURRENT = 80;
     public static final double DEAD_BAND = .5;
+
+    public static final class Auton
+    {
+
+        public static final PIDFConfig xAutoPID     = new PIDFConfig(0.7, 0, 0);
+        public static final PIDFConfig yAutoPID     = new PIDFConfig(0.7, 0, 0);
+        public static final PIDFConfig angleAutoPID = new PIDFConfig(0.4, 0, 0.01);
+
+        public static final double MAX_SPEED        = 2;
+        public static final double MAX_ACCELERATION = 2;
+    }
 
     public static class AprilTags {
         public static final int SOURCE_RIGHT_BLUE_ID = 1;
@@ -190,8 +203,8 @@ public final class Constants {
     public static class LimelightConstants {
         public static final boolean USE_FOR_TARGETING = true;
         public static final boolean LED_ON_DEFAULT = false;
-        public static final double CAMERA_MIN_FLOOR_HEIGHT = 15;
-        public static final double CAMERA_INITIAL_PITCH = 27.7;
+        public static final double CAMERA_MIN_FLOOR_HEIGHT = 8;
+        public static final double CAMERA_INITIAL_PITCH = 46.5;
         // declare ID's of pipelines here
         public static final int kCubePipeline = 0;
         public static final int kReflectivePipeline = 1;

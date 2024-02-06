@@ -1,62 +1,51 @@
-// package frc.team1126.commands.auto;
-
-// import com.pathplanner.lib.PathPlanner;
-// import com.pathplanner.lib.auto.PIDConstants;
-// import com.pathplanner.lib.auto.SwerveAutoBuilder;
-// import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.InstantCommand;
-// import edu.wpi.first.wpilibj2.command.WaitCommand;
-// import frc.team1126.Constants;
-// import frc.team1126.RobotContainer;
-
-// import java.util.HashMap;
-
-// public final class Autos {
-
-//   private static final SendableChooser<Command> autonChooser = new SendableChooser<Command>();;
-//   private static HashMap<String, Command> eventMap;
-//   private static SwerveAutoBuilder autonBuilder;
-
-//   public static void init() {
-
-//     eventMap = new HashMap<>();
-//     setMarkers();
-
-//     autonBuilder =
-//         new SwerveAutoBuilder(
-//             RobotContainer.swerve::getPose,
-//             RobotContainer.swerve::resetOdometry,
-//             new PIDConstants(Constants.AutonConstants.XY_CONTROLLER_P, 0.0, 0.0),
-//             new PIDConstants(Constants.AutonConstants.THETA_CONTROLLER_P, 0.0, 0.0),
-//             RobotContainer.swerve::setChassisSpeeds,
-//             eventMap,
-//             true,
-//             RobotContainer.swerve);
-
-//     autonChooser.setDefaultOption("No-op", new InstantCommand());
-//     autonChooser.addOption("Move 1 Meter", move1Meter());
-//     autonChooser.addOption("Move 1 Meter Back", move1MeterBack());
-//     SmartDashboard.putData("Auton Chooser", autonChooser);
-//   }
-
-//   private static void setMarkers() {
-//     eventMap.put("Wait a Second", new WaitCommand(1)); //Example marker
-//   }
-
-//   public static Command getAutonomousCommand() {
-//     return autonChooser.getSelected();
-//   }
-
-//   public static Command move1Meter() {
-//     return autonBuilder.fullAuto(
-//         PathPlanner.loadPathGroup(
-//             "Move 1 Meter", Constants.AutonConstants.CONSTRAINTS));
-//   }
-//   public static Command move1MeterBack() {
-//     return autonBuilder.fullAuto(
-//         PathPlanner.loadPathGroup(
-//             "Move 1 Meter Back", Constants.AutonConstants.CONSTRAINTS));
-//   }
-// }
+//// Copyright (c) FIRST and other WPILib contributors.
+//// Open Source Software; you can modify and/or share it under the terms of
+//// the WPILib BSD license file in the root directory of this project.
+//
+//package frc.team1126.commands.auto;
+//
+////import com.pathplanner.lib.PathConstraints;
+////import com.pathplanner.lib.PathPlanner;
+////import com.pathplanner.lib.PathPlannerTrajectory;
+////import com.pathplanner.lib.PathPoint;
+//import com.pathplanner.lib.path.PathPlannerPath;
+//import com.pathplanner.lib.path.PathConstraints;
+//import com.pathplanner.lib.path.PathPlannerTrajectory;
+//import edu.wpi.first.math.geometry.Rotation2d;
+//import edu.wpi.first.math.geometry.Translation2d;
+////import edu.wpi.first.wpilibj2.command.CommandBase;
+//import edu.wpi.first.wpilibj2.command.*;
+//import frc.team1126.subsystems.SwerveSubsystem;
+//import frc.team1126.Constants.Auton;
+////import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+//
+//public final class Autos
+//{
+//
+//    private Autos()
+//    {
+//        throw new UnsupportedOperationException("This is a utility class!");
+//    }
+//
+//    /**
+//     * Example static factory for an autonomous command.
+//     */
+//    public static Command exampleAuto(SwerveSubsystem swerve)
+//    {
+//        PathPlannerTrajectory example = PathPlannerPath.fromPathFile("AdvancedBlueAuto2",
+//                new PathConstraints(Auton.MAX_SPEED, Auton.MAX_ACCELERATION));
+//        // Simple path with holonomic rotation. Stationary start/end. Max velocity of 4 m/s and max accel of 3 m/s^2
+////    PathPlannerTrajectory example = PathPlanner.generatePath(
+////        new PathConstraints(4, 3),
+////        new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
+////// position, heading(direction of travel), holonomic rotation
+////        new PathPoint(new Translation2d(1.0, 1.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
+////// position, heading(direction of travel), holonomic rotation
+////        new PathPoint(new Translation2d(3.0, 3.0), Rotation2d.fromDegrees(45), Rotation2d.fromDegrees(-90))
+////        // position, heading(direction of travel), holonomic rotation
+////                                                            );
+//        return Commands.sequence(new FollowTrajectory(swerve, example, true));
+//    }
+//
+//
+//}

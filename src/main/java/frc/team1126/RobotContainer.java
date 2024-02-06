@@ -5,11 +5,16 @@
 package frc.team1126;
 
 import java.io.File;
+import java.util.HashMap;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team1126.Constants.SwerveConstants;
@@ -28,6 +33,10 @@ public class RobotContainer
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
+  
+private static HashMap<String, Command> pathMap = new HashMap<>();
+ 
+  private final SendableChooser<Command> _chooser = new SendableChooser<>();
 
   CommandXboxController driver = new CommandXboxController(Constants.GeneralConstants.DRIVER_CONTROLLER_ID);
   CommandXboxController operator = new CommandXboxController(Constants.GeneralConstants.OPERATOR_CONTROLLER_ID);
@@ -54,16 +63,19 @@ public class RobotContainer
   	// public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
     public final Limelight m_limeLight = new Limelight();
 
+
+
   public RobotContainer() 
   {
-
+   
     
     configureBindings();
     swerve.setDefaultCommand(new DriveFieldRelative(swerve, 
-                                                    () -> driver.getRawAxis(translationAxis),
-                                                    () -> driver.getRawAxis(strafeAxis),
-                                                    () -> driver.getRawAxis(rotationAxis))); 
-
+                                                    () -> driver.getRawAxis(translationAxis)*-1,
+                                                    () -> driver.getRawAxis(strafeAxis) *-1,
+                                                    () -> driver.getRawAxis(rotationAxis)*-1)); 
+    
+           configureChooser();                                         
                   
   }
 
@@ -72,7 +84,7 @@ public class RobotContainer
     driver.leftTrigger().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
     driver.a().whileTrue(new VisionAlignment(this::getXSpeed, 0, swerve));
     driver.x().whileTrue(new LLAlignCommand(true));
-    driver.b().whileTrue(new DriveToDistance(swerve,40));
+     driver.b().whileTrue(new DriveToDistance(swerve,60));
     driver.povUp().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2)));
     driver.povDown().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI)));
     driver.povLeft().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI/2)));
@@ -117,4 +129,35 @@ public class RobotContainer
     //   finalY = -finalY;
     return finalY;
   } 
+
+  public void configureChooser() {
+        
+       //_chooser.setDefaultOption("Do Nothing", new InstantCommand());
+       _chooser.setDefaultOption("2M AUTO", new PathPlannerAuto("2M Auto"));
+       _chooser.addOption("5M Auto", new PathPlannerAuto("5M Auto"));
+
+        SmartDashboard.putData("AUTO CHOICES ", _chooser); 
+        
+        
+    }
+
+   	/**
+	 * Use this to pass the autonomous command to the main {@link Robot} class.
+	 *
+	 * @return the command to run in autonomous
+	 */
+	public Command getAutonomousCommand() {
+//	swerve.zeroGyro();
+//
+//		// m_driveSubsystem.setHeading(180);
+//		Timer.delay(0.05);
+//		// the command to be run in autonomous
+//        SmartDashboard.putData("AUTO CHOICES ", _chooser);
+//		return _chooser.getSelected();
+      return _chooser.getSelected();
+//      return swerve.getAutonomousCommand(_chooser.getSelected().getName(), true);
+
+
+	}
+	
 }

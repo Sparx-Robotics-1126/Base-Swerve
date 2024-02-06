@@ -328,6 +328,8 @@ public abstract SwerveIMU getSwerveIMU();
    */
   public abstract SwerveController getSwerveController();
 
+
+  public abstract SwerveDriveConfiguration getSwerveDriveConfiguration();
   /**
    * Get the {@link SwerveModule}s associated with the {@link FirstOrderSwerveDrive}.
    *

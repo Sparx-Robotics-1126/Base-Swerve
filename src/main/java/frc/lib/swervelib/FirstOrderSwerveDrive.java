@@ -898,6 +898,11 @@ public class FirstOrderSwerveDrive extends SwerveDrive
     return swerveController;
   }
 
+  public SwerveDriveConfiguration getSwerveDriveConfiguration()
+  {
+    return swerveDriveConfiguration;
+  }
+
   /**
    * Get the {@link SwerveModule}s associated with the {@link FirstOrderSwerveDrive}.
    *
@@ -1003,6 +1008,12 @@ public class FirstOrderSwerveDrive extends SwerveDrive
   public void disableSecondOrderKinematics()
   {
     enableSecondOrderKinematics(0);
+  }
+
+  @Override
+  public SwerveIMU getSwerveIMU() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getSwerveIMU'");
   }
 
 }
