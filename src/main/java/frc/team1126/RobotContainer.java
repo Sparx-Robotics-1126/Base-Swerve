@@ -21,13 +21,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team1126.Constants.SwerveConstants;
 import frc.team1126.commands.Limelight.DriveToDistance;
-// import frc.team1126.commands.Limelight.LLAlignCommand;
+import frc.team1126.commands.Limelight.LLAlignCommand;
 import frc.team1126.commands.Limelight.VisionAlignment;
-// import frc.team1126.commands.drive.DriveFieldRelative;
+import frc.team1126.commands.drive.DriveFieldRelative;
 
 import frc.team1126.subsystems.CANdleSubsystem;
 import frc.team1126.subsystems.Climber;
-//import frc.team1126.subsystems.SwerveSubsystem;
+import frc.team1126.subsystems.SwerveSubsystem;
 import frc.team1126.subsystems.sensors.Limelight;
 public class RobotContainer 
 {
@@ -36,7 +36,7 @@ public class RobotContainer
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
-  // public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
+  public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
   
   private static HashMap<String, Command> pathMap = new HashMap<>();
  
@@ -51,51 +51,50 @@ public class RobotContainer
   // private final JoystickButton cubeMode = new JoystickButton(operator.getHID(), XboxController.Button.kStart.value);
   // private final JoystickButton coneMode = new JoystickButton(operator.getHID(), XboxController.Button.kBack.value);
 
-  //public final static SwerveSubsystem swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-  	// public static final CANdleSubsystem m_candleSubsystem = new CANdleSubsystem();
+  public final static SwerveSubsystem swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
     public final Limelight m_limeLight = new Limelight();
 
-    public final Climber climber = new Climber();
+    // public final Climber climber = new Climber();
 
 
   public RobotContainer() 
   {
 
-    //configureDriverBindings();
+    configureDriverBindings();
     configureOperatoreBindings();
-    // swerve.setDefaultCommand(new DriveFieldRelative(swerve, 
-    //                                                 () -> driver.getRawAxis(translationAxis)*-1,
-    //                                                 () -> driver.getRawAxis(strafeAxis) *-1,
-    //                                                 () -> driver.getRawAxis(rotationAxis)*-1)); 
+    swerve.setDefaultCommand(new DriveFieldRelative(swerve, 
+                                                    () -> driver.getRawAxis(translationAxis)*-1,
+                                                    () -> driver.getRawAxis(strafeAxis) *-1,
+                                                    () -> driver.getRawAxis(rotationAxis)*-1)); 
     
-          // configureChooser();   
+          configureChooser();   
 
-         climber.setDefaultCommand(climber.moveClimber(
-            MathUtil.applyDeadband(operator.getRawAxis(XboxController.Axis.kLeftY.value), .1),
-            MathUtil.applyDeadband(operator.getRawAxis(XboxController.Axis.kLeftX.value), .1)));
+        //  climber.setDefaultCommand(climber.moveClimber(
+        //     MathUtil.applyDeadband(operator.getRawAxis(XboxController.Axis.kLeftY.value), .1),
+        //     MathUtil.applyDeadband(operator.getRawAxis(XboxController.Axis.kLeftX.value), .1)));
   }
 
-  // private void configureDriverBindings()
-  // {
-  //   driver.leftTrigger().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
-  //   driver.a().whileTrue(new VisionAlignment(this::getXSpeed, 0, swerve));
-  //   driver.x().whileTrue(new LLAlignCommand(true));
-  //   driver.b().whileTrue(new DriveToDistance(swerve,60));
-  //   driver.povUp().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2)));
-  //   driver.povDown().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI)));
-  //   driver.povLeft().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI/2)));
-  //   driver.povRight().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 + Math.PI/2)));
-  //   driver.leftBumper().onTrue(new InstantCommand(() -> swerve.setTranslationalScalar(Constants.SwerveConstants.SWERVE_SLOW_TRANSLATION)));
-  //   driver.leftBumper().onFalse(new InstantCommand(() -> swerve.setTranslationalScalar(Constants.SwerveConstants.SWERVE_NORMAL_TRANSLATION)));
-  // }
+  private void configureDriverBindings()
+  {
+    driver.leftTrigger().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
+    driver.a().whileTrue(new VisionAlignment(this::getXSpeed, 0, swerve));
+    driver.x().whileTrue(new LLAlignCommand(true));
+    // driver.b().whileTrue(new DriveToDistance(swerve,60));
+    // driver.povUp().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2)));
+    // driver.povDown().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI)));
+    // driver.povLeft().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI/2)));
+    // driver.povRight().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 + Math.PI/2)));
+    // driver.leftBumper().onTrue(new InstantCommand(() -> swerve.setTranslationalScalar(Constants.SwerveConstants.SWERVE_SLOW_TRANSLATION)));
+    // driver.leftBumper().onFalse(new InstantCommand(() -> swerve.setTranslationalScalar(Constants.SwerveConstants.SWERVE_NORMAL_TRANSLATION)));
+  }
 
   private void configureOperatoreBindings()
   {
     // operator.start().onTrue(new InstantCommand(() ->m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CONE)));
     // operator.back().onTrue(new InstantCommand(() -> m_candleSubsystem.setLEDState(CANdleSubsystem.LEDState.CUBE)));
     operator.x().onTrue(new InstantCommand(() ->  operator.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0)));
-    operator.leftBumper().whileTrue(new InstantCommand(() -> climber.moveToMax(5)));
-    operator.rightBumper().whileTrue(new InstantCommand(() -> climber.moveToHome(5)));
+    // operator.leftBumper().whileTrue(new InstantCommand(() -> climber.moveToMax(5)));
+    // operator.rightBumper().whileTrue(new InstantCommand(() -> climber.moveToHome(5)));
   }
 
   double getXSpeed(){ 
@@ -132,16 +131,16 @@ public class RobotContainer
     return finalY;
   } 
 
-  // public void configureChooser() {
+  public void configureChooser() {
         
-  //      //_chooser.setDefaultOption("Do Nothing", new InstantCommand());
-  //      _chooser.setDefaultOption("2M AUTO", new PathPlannerAuto("2M Auto"));
-  //      _chooser.addOption("5M Auto", new PathPlannerAuto("5M Auto"));
+       //_chooser.setDefaultOption("Do Nothing", new InstantCommand());
+       _chooser.setDefaultOption("2M AUTO", new PathPlannerAuto("2M Auto"));
+       _chooser.addOption("5M Auto", new PathPlannerAuto("5M Auto"));
 
-  //       SmartDashboard.putData("AUTO CHOICES ", _chooser); 
+        SmartDashboard.putData("AUTO CHOICES ", _chooser); 
         
         
-  //   }
+    }
 
    	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.

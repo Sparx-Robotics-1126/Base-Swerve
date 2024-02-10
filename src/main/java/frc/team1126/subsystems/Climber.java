@@ -3,6 +3,8 @@ package frc.team1126.subsystems;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.swervelib.imu.SwerveIMU;
@@ -58,15 +60,15 @@ public class Climber extends SubsystemBase {
         SmartDashboard.putNumber("Roll", imu.getRoll());
     }
 
-    public Command moveClimber(double leftY, double rightY) {
+    // public Command moveClimber(double leftY, double rightY) {
 
-        return this.run(() -> setPower(leftY,rightY));
-    }
+    //     return this.run(() -> setPower(leftY,rightY));
+    // }
 
-    public Command moveClimberWithIMU(double leftY, double rightY) {
+    // public Command moveClimberWithIMU(double leftY, double rightY) {
 
-        return this.run(() -> moveMotorsWithIMU(leftY,rightY));
-    }
+    //     return this.run(() -> moveMotorsWithIMU(leftY,rightY));
+    // }
 
     private void setPower(double leftY, double rightY) {
         if (leftHome.get() && leftY < 0) {
