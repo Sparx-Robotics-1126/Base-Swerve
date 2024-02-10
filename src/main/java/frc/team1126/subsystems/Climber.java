@@ -8,48 +8,52 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.swervelib.imu.SwerveIMU;
-import frc.team1126.Constants.ClimberConstants;
+//import frc.lib.swervelib.imu.SwerveIMU;
+import static frc.team1126.Constants.ClimberConstants.*;
 import frc.team1126.Constants.ShooterConstants;
 
 public class Climber extends SubsystemBase {
- 
+
     private CANSparkMax motorLeft;
     private CANSparkMax motorRight;
-   
+
     private RelativeEncoder m_leftEncoder;
     private RelativeEncoder m_rightEncoder;
 
-    private SwerveIMU imu;
+    // private SwerveIMU imu;
 
-    	private DigitalInput leftHome;
-        private DigitalInput rightHome;
-
+    private DigitalInput leftHome;
+    private DigitalInput rightHome;
 
     private static final double MAX_HEIGHT = 100.0; // Define your max height here
+    private double leftPower = 0.0;
+    private double rightPower = 0.0;
 
+    public Climber() {
 
-    public Climber(SwerveSubsystem swerveSubsystem) {
-    
-    imu= swerveSubsystem.getSwerveIMU();
-    motorLeft = new CANSparkMax(ClimberConstants.MOTOR_LEFT_ID, CANSparkLowLevel.MotorType.kBrushless);
-    motorRight = new CANSparkMax(ClimberConstants.MOTOR_RIGHT_ID, CANSparkLowLevel.MotorType.kBrushless);
+        leftHome = new DigitalInput(LEFT_DIGITAL_INPUT);
+        rightHome = new DigitalInput(RIGHT_DIGITAL_INPUT);
 
-    motorLeft.setInverted(true);
-    m_leftEncoder = motorLeft.getEncoder();
-    m_rightEncoder = motorRight.getEncoder();
+        // imu= swerveSubsystem.getSwerveIMU();
+        motorLeft = new CANSparkMax(MOTOR_LEFT_ID, CANSparkLowLevel.MotorType.kBrushless);
+        motorRight = new CANSparkMax(MOTOR_RIGHT_ID, CANSparkLowLevel.MotorType.kBrushless);
 
-    m_rightEncoder.setPositionConversionFactor(ClimberConstants.kEncoderDistanceConversionFactor);
-    m_leftEncoder.setPositionConversionFactor(ClimberConstants.kEncoderDistanceConversionFactor);
-    m_leftEncoder
-        .setVelocityConversionFactor(Math.PI * ClimberConstants.kWheelDiameterMeters / ClimberConstants.kGearRatio / 60.0);
-    m_rightEncoder
-        .setVelocityConversionFactor(Math.PI * ClimberConstants.kWheelDiameterMeters / ClimberConstants.kGearRatio / 60.0);
+        motorLeft.setInverted(true);
+        motorRight.setInverted(true);
+        m_leftEncoder = motorLeft.getEncoder();
+        m_rightEncoder = motorRight.getEncoder();
 
-    m_leftEncoder.setPosition(0);
-    m_rightEncoder.setPosition(0);
+        m_rightEncoder.setPositionConversionFactor(kEncoderDistanceConversionFactor);
+        m_leftEncoder.setPositionConversionFactor(kEncoderDistanceConversionFactor);
+        m_leftEncoder
+                .setVelocityConversionFactor(Math.PI * kWheelDiameterMeters / kGearRatio / 60.0);
+        m_rightEncoder
+                .setVelocityConversionFactor(Math.PI * kWheelDiameterMeters / kGearRatio / 60.0);
 
-}
+        m_leftEncoder.setPosition(0);
+        m_rightEncoder.setPosition(0);
+
+    }
 
     @Override
     public void periodic() {
@@ -58,110 +62,114 @@ public class Climber extends SubsystemBase {
         double averageHeight = (leftHeight + rightHeight) / 2.0;
 
         SmartDashboard.putNumber("Climber Height", averageHeight);
-        SmartDashboard.putNumber("Roll", imu.getRoll());
+        // SmartDashboard.putNumber("Roll", imu.getRoll());
+
+        SmartDashboard.putNumber("Left height", m_leftEncoder.getPosition());
+        SmartDashboard.putNumber("Right height", m_rightEncoder.getPosition());
+        SmartDashboard.putBoolean("Left Sensor", !leftHome.get());
+        SmartDashboard.putBoolean("Right Sensor", !rightHome.get());
+        SmartDashboard.putNumber("Left Power", leftPower);
+        SmartDashboard.putNumber("Right Power", rightPower);
     }
 
-    public Command moveClimber(double leftY, double rightY) {
+    // public Command moveClimber(double leftY, double rightY) {
+    //     return this.run(() -> setPower(leftY, rightY));
+    // }
 
-        return this.run(() -> setPower(leftY,rightY));
+    public Command moveLeftClimber(double leftY) {
+        return this.run(() -> setLeftPower(leftY));
     }
 
-    public Command moveClimberWithIMU(double leftY, double rightY) {
-
-        return this.run(() -> moveMotorsWithIMU(leftY,rightY));
+    public Command moveRightClimber(double rightY) {
+        return this.run(() -> setLeftPower(rightY));
     }
 
-    private void setPower(double leftY, double rightY) {
-        if (leftHome.get() && leftY < 0) {
-            motorLeft.set(0);
-        } else {
-            motorLeft.set(leftY);
-        }
+    // public Command moveClimberWithIMU(double leftY, double rightY) {
 
-        if (rightHome.get() && rightY < 0) {
-            motorRight.set(0);
-        } else {
-            motorRight.set(rightY);
-        }
+    // return this.run(() -> moveMotorsWithIMU(leftY,rightY));
+    // }
+
+
+    public void setLeftPower(double leftY) {
+        leftPower = leftY;
+        motorLeft.set(leftY);
     }
 
-    public void moveMotorsWithIMU(double leftY, double rightY) {
-        double roll = imu.getRoll();
-
-        if (roll != 0) {
-            // If the roll is not 0, adjust the power of the motors to correct the roll.
-            // This is a simple example and might need to be adjusted based on your specific requirements.
-            double adjustment = roll * 0.01; // You might need to adjust this factor
-
-            leftY -= adjustment;
-            rightY += adjustment;
-        }
-
-        // Move the motors
-        setPower(leftY, rightY);
+    public void setRightPower(double rightY) {
+        rightPower = rightY;
+        motorRight.set(rightY);
     }
 
+    // public void moveMotorsWithIMU(double leftY, double rightY) {
+    // double roll = imu.getRoll();
 
-    public void moveToMax(double speed) {
-        // Start moving the motors at the specified speed
-        double leftY = speed;
-        double rightY = speed;
+    // if (roll != 0) {
+    // // If the roll is not 0, adjust the power of the motors to correct the roll.
+    // // This is a simple example and might need to be adjusted based on your
+    // specific requirements.
+    // double adjustment = roll * 0.01; // You might need to adjust this factor
 
-        // Continuously check the current height of the motors
-        while (true) {
-            double roll = imu.getRoll();
+    // leftY -= adjustment;
+    // rightY += adjustment;
+    // }
 
-            if (roll != 0) {
-                // If the roll is not 0, adjust the power of the motors to correct the roll.
-                // This is a simple example and might need to be adjusted based on your specific requirements.
-                double adjustment = roll * 0.01; // You might need to adjust this factor
+    // // Move the motors
+    // setPower(leftY, rightY);
+    // }
 
-                leftY -= adjustment;
-                rightY += adjustment;
-            }
+    // public void moveToMax(double speed) {
+    //     // Start moving the motors at the specified speed
+    //     double leftY = speed;
+    //     double rightY = speed;
+    //     System.out.println("in here blah");
+    //     // Continuously check the current height of the motors
+    //     while (true) {
+    //         // double roll = imu.getRoll();
 
-            // Move the motors
-            setPower(leftY, rightY);
+    //         // if (roll != 0) {
+    //         // // If the roll is not 0, adjust the power of the motors to correct the roll.
+    //         // // This is a simple example and might need to be adjusted based on your
+    //         // specific requirements.
+    //         // double adjustment = roll * 0.01; // You might need to adjust this factor
 
-            double leftHeight = m_leftEncoder.getPosition();
-            double rightHeight = m_rightEncoder.getPosition();
+    //         // leftY -= adjustment;
+    //         // rightY += adjustment;
+    //         // }
 
-            // If the current height is equal to or greater than the max height, stop the motors
-            if (leftHeight >= MAX_HEIGHT || rightHeight >= MAX_HEIGHT) {
-                motorLeft.set(0);
-                motorRight.set(0);
-                break;
-            }
-        }
+    //         // Move the motors
+    //         setPower(leftY, rightY);
+
+    //         double leftHeight = m_leftEncoder.getPosition();
+    //         double rightHeight = m_rightEncoder.getPosition();
+
+    //         // If the current height is equal to or greater than the max height, stop the
+    //         // motors
+    //         if (leftHeight >= MAX_HEIGHT || rightHeight >= MAX_HEIGHT) {
+    //             motorLeft.set(0);
+    //             motorRight.set(0);
+    //             break;
+    //         }
+    //     }
+    // }
+
+    // public void moveToHome(double speed) {
+    //     setPower(-speed, -speed);
+    // }
+
+    public double getLeftPosition() {
+        return m_leftEncoder.getPosition();
     }
-    public void moveToHome(double speed) {
-        // Start moving the motors in the negative direction at the specified speed
-        double leftY = -speed;
-        double rightY = -speed;
 
-        // Continuously check the state of leftHome and rightHome
-        while (true) {
-            // If leftHome is true, stop the left motor
-            if (leftHome.get()) {
-                motorLeft.set(0);
-                leftY = 0;
-            } else {
-                motorLeft.set(leftY);
-            }
+    public double getRightPosition() {
+        return m_rightEncoder.getPosition();
+    }
 
-            // If rightHome is true, stop the right motor
-            if (rightHome.get()) {
-                motorRight.set(0);
-                rightY = 0;
-            } else {
-                motorRight.set(rightY);
-            }
+    public boolean isLeftHome() {
+        return leftHome.get();
+    }
 
-            // If both leftHome and rightHome are true, break the loop
-            if (leftHome.get() && rightHome.get()) {
-                break;
-            }
-        }
+    public boolean isRightHome() {
+        return rightHome.get();
     }
 
 }
