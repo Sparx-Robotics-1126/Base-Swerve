@@ -320,6 +320,8 @@ public final class Constants {
         //for endgame rumble feature
         public static final int EndGameSeconds = 30;
         public static final int StopRumbleSeconds = 28;
+      
+
     }
 
     public static class ClimberConstants {
@@ -331,10 +333,6 @@ public final class Constants {
 
         public static final int MOTOR_LEFT_ID = 1;
         public static final int MOTOR_RIGHT_ID = 2;
-
-        public static final double MAX_HEIGHT = 4.1;
-        public static final int LEFT_DIGITAL_INPUT = 0;
-        public static final int RIGHT_DIGITAL_INPUT = 1;
     }
 
     public static class StorageConstants {
