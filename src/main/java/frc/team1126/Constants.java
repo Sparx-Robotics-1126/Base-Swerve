@@ -333,8 +333,8 @@ public final class Constants {
         public static final int MOTOR_RIGHT_ID = 2;
 
         public static final double MAX_HEIGHT = 4.1;
-        public static final int LEFT_DIGITAL_INPUT = 0;
-        public static final int RIGHT_DIGITAL_INPUT = 1;
+        public static final int LEFT_DIGITAL_INPUT = 10;
+        public static final int RIGHT_DIGITAL_INPUT = 11;
     }
 
     public static class StorageConstants {
