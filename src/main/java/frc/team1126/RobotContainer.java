@@ -20,13 +20,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team1126.Constants.SwerveConstants;
-import frc.team1126.commands.Limelight.DriveToDistance;
-import frc.team1126.commands.Limelight.LLAlignCommand;
-import frc.team1126.commands.Limelight.VisionAlignment;
-import frc.team1126.commands.drive.DriveFieldRelative;
+// import frc.team1126.commands.Limelight.DriveToDistance;
+// import frc.team1126.commands.Limelight.LLAlignCommand;
+// import frc.team1126.commands.Limelight.VisionAlignment;
+// import frc.team1126.commands.drive.DriveFieldRelative;
 
 import frc.team1126.subsystems.CANdleSubsystem;
-import frc.team1126.subsystems.Climber;
+// import frc.team1126.subsystems.Climber;
 import frc.team1126.subsystems.SwerveSubsystem;
 import frc.team1126.subsystems.sensors.Limelight;
 public class RobotContainer 
@@ -51,7 +51,9 @@ public class RobotContainer
   // private final JoystickButton cubeMode = new JoystickButton(operator.getHID(), XboxController.Button.kStart.value);
   // private final JoystickButton coneMode = new JoystickButton(operator.getHID(), XboxController.Button.kBack.value);
 
-  public final static SwerveSubsystem swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+  // public final static SwerveSubsystem swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+  private final SwerveSubsystem swerve = new SwerveSubsystem(
+    new File(Filesystem.getDeployDirectory(), "swerve/neo"));
     public final Limelight m_limeLight = new Limelight();
 
     // public final Climber climber = new Climber();
@@ -60,15 +62,22 @@ public class RobotContainer
   public RobotContainer() 
   {
 
-    configureDriverBindings();
-    configureOperatoreBindings();
-    swerve.setDefaultCommand(new DriveFieldRelative(swerve, 
-                                                    () -> driver.getRawAxis(translationAxis)*-1,
-                                                    () -> driver.getRawAxis(strafeAxis) *-1,
-                                                    () -> driver.getRawAxis(rotationAxis)*-1)); 
+    Command driveFieldOrientedAnglularVelocity = swerve.driveCommand(
+      () -> MathUtil.clamp(MathUtil.applyDeadband(-driver.getLeftY(), .1), -1,
+          1),
+      () -> MathUtil.clamp(MathUtil.applyDeadband(-driver.getLeftX(),.1), -1,
+          1),
+      () -> -driver.getRightX());
+
+      swerve.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // swerve.setDefaultCommand(new DriveFieldRelative(swerve, 
+    //                                                 () -> driver.getRawAxis(translationAxis)*-1,
+    //                                                 () -> driver.getRawAxis(strafeAxis) *-1,
+    //                                                 () -> driver.getRawAxis(rotationAxis)*-1)); 
     
           configureChooser();   
-
+          configureDriverBindings();
+          configureOperatoreBindings();
         //  climber.setDefaultCommand(climber.moveClimber(
         //     MathUtil.applyDeadband(operator.getRawAxis(XboxController.Axis.kLeftY.value), .1),
         //     MathUtil.applyDeadband(operator.getRawAxis(XboxController.Axis.kLeftX.value), .1)));
@@ -77,8 +86,8 @@ public class RobotContainer
   private void configureDriverBindings()
   {
     driver.leftTrigger().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
-    driver.a().whileTrue(new VisionAlignment(this::getXSpeed, 0, swerve));
-    driver.x().whileTrue(new LLAlignCommand(true));
+    // driver.a().whileTrue(new VisionAlignment(this::getXSpeed, 0, swerve));
+    // driver.x().whileTrue(new LLAlignCommand(true));
     // driver.b().whileTrue(new DriveToDistance(swerve,60));
     // driver.povUp().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2)));
     // driver.povDown().onTrue(new InstantCommand(() -> swerve.setHeadingAngle(Math.round(swerve.getYaw().getRadians() / (2.0*Math.PI)) * Math.PI * 2 - Math.PI)));
@@ -174,6 +183,8 @@ public class RobotContainer
       
     }
   } 
-
+public void zeroGyro(){
+  swerve.zeroGyro();
+}
 
 }

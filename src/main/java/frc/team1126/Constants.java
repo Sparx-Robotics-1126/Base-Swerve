@@ -10,12 +10,13 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.lib.Toolbox.AprilTag;
 import frc.lib.Toolbox.PIDGains;
+import swervelib.parser.PIDFConfig;
 
 import java.util.HashMap;
 import java.util.List;
 
 import com.pathplanner.lib.path.PathConstraints;
-import frc.lib.swervelib.parser.PIDFConfig;
+// import frc.lib.swervelib.parser.PIDFConfig;
 
 public final class Constants {
     public static final double NOMINAL_VOLTAGE = 12;
@@ -171,7 +172,7 @@ public final class Constants {
 
     public static class CANdleConstants {
         /* CANdle ID */
-        public static final int CANdleID = 3;
+        public static final int CANdleID = 15;
 
         /* Purple RGB */
         public static final int PURPLE_R = 255;
@@ -318,7 +319,7 @@ public final class Constants {
         public static final boolean CHASSIS_VELOCITY_CORRECTION = false;
 
         //for endgame rumble feature
-        public static final int EndGameSeconds = 30;
+        public static final int EndGameSeconds = 20;
         public static final int StopRumbleSeconds = 28;
       
 
