@@ -52,6 +52,7 @@ public class RobotContainer
   // private final JoystickButton coneMode = new JoystickButton(operator.getHID(), XboxController.Button.kBack.value);
 
   // public final static SwerveSubsystem swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+  
   private final SwerveSubsystem swerve = new SwerveSubsystem(
     new File(Filesystem.getDeployDirectory(), "swerve/neo"));
     public final Limelight m_limeLight = new Limelight();
@@ -75,6 +76,7 @@ public class RobotContainer
     //                                                 () -> driver.getRawAxis(strafeAxis) *-1,
     //                                                 () -> driver.getRawAxis(rotationAxis)*-1)); 
     
+    swerve.setupPathPlanner();
           configureChooser();   
           configureDriverBindings();
           configureOperatoreBindings();
@@ -145,7 +147,8 @@ public class RobotContainer
        //_chooser.setDefaultOption("Do Nothing", new InstantCommand());
        _chooser.setDefaultOption("2M AUTO", new PathPlannerAuto("2M Auto"));
        _chooser.addOption("5M Auto", new PathPlannerAuto("5M Auto"));
-
+       _chooser.addOption("path1", new PathPlannerAuto("Path1"));
+       _chooser.addOption("Note 1", new PathPlannerAuto("Note 1 Auto"));
         SmartDashboard.putData("AUTO CHOICES ", _chooser); 
         
         
